@@ -17,7 +17,7 @@
     "passport": "~0.2.0",
     "passport-local": "~0.1.6",
     "ejs": "~0.8.4",
-    "passport-facebook": "^1.0.3"
+    "passport-facebook": "~1.0.3"
   },
   "devDependencies": {
     "grunt": "~0.4.1",
