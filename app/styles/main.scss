@@ -76,16 +76,83 @@ body {
     width: 100%;
 }
 
-.auth-panel {
+.auth-panel, .profile-panel {
     width: 500px;
+    margin-top: 50px;
 
-}
-
-.profile-panel {
-    width: 500px;
+    @media(max-width:767px){
+        margin-top: 273px;
+    }
 }
 
 .main-container-fixed {
+    @media(max-width:767px){
+        margin-top: 273px;
+    }
+    @media(min-width:768px){
+        width: 1000px;
+    }
+    @media(min-width:992px){
+        width: 100%;
+    }
+    @media(min-width:1200px){
+        width: 100%;
+    }
+
+    // position: absolute;
+    // top: 50px;
+    margin-top: 50px;
+    .container-col {
+        border-left: 1px solid #CCC;
+        height: 100%;
+    }
+    .col-head {
+        border-bottom: 1px solid #CCC;
+        background: #e5e5e5;
+    }
+
+
+    .course-input {
+        margin-top: 5px;
+    }
+
+    .au-btn:not(.btn-warning) {
+        background: white;
+        color: #AAA;
+    }
+
+    .autype-row {
+        margin-top: 5px;
+    }
+
+    .add-course-btn {
+        margin-top: 10px;
+    }
+
+    .pref-course-row {
+        margin-bottom: 10px;
+        .pref-course-index {
+            display:table-cell;
+            vertical-align:middle;
+            float:none;
+            background: #e5e5e5;
+        }
+        .pref-course-info {
+            margin-top: 5px;
+            display:table-cell;
+            vertical-align:middle;
+            float:none;
+            padding-bottom: 5px;
+            padding-top: 5px;
+
+        }
+        .pref-course-remove {
+            border-radius: 0px 2px 2px 0px;
+        }
+        .au-checked {
+            background: #ac4536;
+        }
+    }
 
 }
 
