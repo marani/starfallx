@@ -85,6 +85,23 @@ body {
     }
 }
 
+$placeholder-color: #ddd;
+
+::-webkit-input-placeholder { /* WebKit browsers */
+    color: $placeholder-color !important;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+    color: $placeholder-color;
+    opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+    color: $placeholder-color;
+    opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+    color: $placeholder-color;
+}
+
 .main-container-fixed {
     @media(max-width:767px){
         margin-top: 273px;
@@ -114,6 +131,9 @@ body {
 
     .course-input {
         margin-top: 5px;
+        // input[placeholder] {
+        //     color: #CCC !important;
+        // }
     }
 
     .au-btn:not(.btn-warning) {
@@ -136,6 +156,7 @@ body {
             vertical-align:middle;
             float:none;
             background: #e5e5e5;
+            cursor: move;
         }
         .pref-course-info {
             margin-top: 5px;

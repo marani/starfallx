@@ -5,7 +5,8 @@ angular.module('starfallxApp', [
     'ngResource',
     'ngSanitize',
     'ngRoute',
-    'ui.bootstrap'
+    'ui.bootstrap',
+    'pouchdb'
 ])
     .config(function($routeProvider, $locationProvider, $httpProvider) {
         $routeProvider

@@ -3,12 +3,16 @@
 <div class="main-container-fixed">
     <div class="col-lg-3 col-md-3 col-sm-3 container-col" ng-controller="PrefCtrl">
         <div class="row text-center col-head"><h4>Your Preferences</h4></div>
-        <div class="h4">School / Year / AU</div>
-
+        <!-- <div class="h4">School / Year / AU</div> -->
         <hr>
         <form class="form" name="form" ng-submit="addCourse()" novalidate>
             <div><strong>Enter Course Code</strong></div>
-            <input type="text" class="form-control course-input" placeholder="e.g: IM4069..">
+            <div class="input-group course-input">
+                <input type="text" class="form-control" placeholder="e.g: IM4069..">
+                <span class="input-group-btn">
+                    <button class="btn btn-success" type="submit"><i class="fa fa-fw fa-plus"></i></button>
+                </span>
+            </div>
 
             <div class="autype-row">
                 <span><strong>Select Type</strong></span> 
@@ -17,10 +21,10 @@
                 <button type="button" class="au-btn btn btn-xs" ng-class="{'btn-warning': newCourse.autypes['UE']}" ng-click="toggleAUType(newCourse, 'UE')">UE</button>
             </div>
 
-            <button type="submit" class="add-course-btn btn btn-success btn-sm btn-block">
-            <i class="fa fa-fw fa-plus"></i> 
-            <strong>Click or Enter to Add</strong
-            ></button>
+            <!-- <button type="submit" class="add-course-btn btn btn-success btn-sm btn-block">
+                <i class="fa fa-fw fa-plus"></i> 
+                <strong>Click or Enter to Add</strong>
+            </button> -->
         </form>
         <hr>
         <div class="pref-course-row panel panel-default" ng-repeat="course in courses">
@@ -38,7 +42,6 @@
                 </div>
             </div>
         </div>
-        
     </div>
     <div class="col-lg-2 col-md-2 col-sm-2 container-col">
         <div class="row text-center col-head"><h4>Possible Plans</h4></div>
@@ -47,34 +50,3 @@
         <div class="row text-center col-head"><h4>Plan Detail</h4></div>
     </div>
 </div>
-        <!-- <div class="row"> -->
-            <!-- <div class="col">CORE </div> -->
-<!-- </div> -->
-        <!-- <button class="btn btn-default dropdown-toggle pref-course-index" type="button">{{chosenIndex}} <span class="caret"></span></button>
-        <ul class="dropdown-menu">
-            <li ng-repeat="index in indexes">
-                <a href ng-click="pickIndex(index)">{{index}}</a>
-            </li>
-        </ul> -->
-            <!-- <div class="input-group">
-                <span class="input-group-addon">1</span>
-                <input type="text" class="form-control pref-course-code" placeholder="Course Code">
-                <span class="input-group-btn">
-                    <button class="btn btn-danger pref-course-remove" type="button">X</button>
-                    <div class="button-group" dropdown is-open="status.isopen">
-                        
-                    </div>
-                </span>
-            </div> -->
-
-        <!-- <br>
-        <button class="btn btn-success btn-xs btn-block"><i class="fa fa-fw fa-plus"></i> <strong>Add a PE</strong></button>
-        <br>
-
-        <br>
-        <button class="btn btn-success btn-xs btn-block"><i class="fa fa-fw fa-plus"></i> <strong>Add a UE</strong></button>
-        <br> -->
-
-        <!-- <br>
-        <button class="btn btn-success btn-xs btn-block"><i class="fa fa-fw fa-plus"></i> <strong>Add a CORE-ELECTIVE</strong></button>
-        <br> -->

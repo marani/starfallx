@@ -6,8 +6,8 @@ angular.module('starfallxApp')
         //     $scope.awesomeThings = awesomeThings;
         // });
     })
-    .controller('PrefCtrl', function($scope){
-        // $scope.courses = ['IM4791', 'CE4015'];
+    .controller('PrefCtrl', function($scope, NTUScraper){
+        $scope.courses = ['IM4791', 'CE4015'];
         $scope.autypes = ['Core', 'UE'];
         $scope.autypes = {
             'CORE': true,
@@ -40,4 +40,15 @@ angular.module('starfallxApp')
         // $scope.status = {
         //     isopen: false
         // }
+        $scope.pull = function () {
+            console.log('pulling data...');
+            NTUScraper.pull()
+                .success(function(data, status, headers, config) {
+                    console.log('data arrived');
+                    console.log(data);
+                })
+                .error(function(data, status, headers, config) {
+                    console.log('error', status, headers, config);
+                });
+        }
     });
