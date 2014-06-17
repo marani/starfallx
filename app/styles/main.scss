@@ -213,7 +213,7 @@ $lighten-3: lighten($sf-red, 23%);
                 border-top: none;
                 background: transparent;
                 td {
-                    color: #727272;
+                    color: #999999;
                     border-top: none;
                     background: transparent;
                 }
@@ -262,12 +262,12 @@ $lighten-3: lighten($sf-red, 23%);
             box-shadow: 0 0 8px lighten($sf-red, 25%);
         }
 
-        .alert {
-            padding: 5px;
-            padding-left: 15px;
-        }
     }
 
+    .alert {
+        padding: 5px;
+        padding-left: 15px;
+    }
     .ctn-course-list {
         margin-top: 10px;
 
@@ -290,7 +290,7 @@ $lighten-3: lighten($sf-red, 23%);
                     outline: none;
                 }
             }
-            tr:hover i { color: $sf-red; }
+            button:hover i { color: $sf-red; }
             tr.ui-sortable-helper {
                 // background: white;
                 // width: 100% !important;
@@ -366,7 +366,7 @@ $lighten-3: lighten($sf-red, 23%);
     @media(min-width:992px){
         width: 1200px;
     }
-    @media(min-width:1200px){
+    @media(min-width:1201px){
         width: 100%;
     }
 }

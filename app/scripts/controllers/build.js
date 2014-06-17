@@ -3,16 +3,11 @@
 angular.module('starfallxApp')
     .controller('BuildCtrl', function($scope, $http) {
     })
-    .controller('PrefCtrl', function($scope, courseStore) {
+    .controller('PrefCtrl', function($scope, courseStore, $timeout) {
         function emptyNewCourse() {
             return {
                 name: '',
                 code: '',
-                auTypes: {
-                    'CORE': false,
-                    'UE': false,
-                    'PE': false
-                },
                 status: {
                     submitted: false,
                     added: false,
@@ -52,19 +47,21 @@ angular.module('starfallxApp')
             courseStore.getByCode($scope.newCourse.code, 
                 function success(course) {
                     if (course && (course != "null")) {
-                        // console.log('table course', course.auTypes);
-                        // console.log('adder course', $scope.newCourse.auTypes);
-                        var auTypes = {
-                            'CORE': $scope.newCourse.auTypes['CORE']
-                        };
-                        for (var t in $scope.newCourse.auTypes)
-                            if ((t != 'CORE') && (course.auTypes.indexOf(t) > -1))
-                                auTypes[t] = $scope.newCourse.auTypes[t];
-                        // console.log('mixed', auTypes);
-                        course.auTypes = auTypes;
+                        if (course.auTypes.length == 0) {
+                            course.auTypes = { 'CORE': true };
+                            course.auTypesSelected = 1;
+                        }
+                        else {
+                            var auTypes = { 'CORE': false };
+                            for (var i = 0; i < course.auTypes.length; i++)
+                                auTypes[course.auTypes[i]] = false;
+                            course.auTypes = auTypes;
+                            course.auTypesSelected = 0;
+                        }
                         $scope.courseList.push(course);
                         $scope.newCourse = emptyNewCourse();
-                        console.log($scope.newCourse, $scope.newCourse.status.submitted && !$scope.newCourse.status.invalid);
+                        updateInvalidAUList();
+                        // console.log($scope.newCourse, $scope.newCourse.status.submitted && !$scope.newCourse.status.invalid);
                     } else {
                         $scope.newCourse.status.invalid = true;
                     }
@@ -74,13 +71,14 @@ angular.module('starfallxApp')
                 }
             );
         }
-
         $scope.toggleAUType = function(course, autype) {
             course.auTypes[autype] = !course.auTypes[autype];
-            console.log(course.auTypes);
+            course.auTypesSelected += course.auTypes[autype]?1:-1;
+            updateInvalidAUList();
         }
         $scope.removeCourse = function(index) {
             $scope.courseList.splice(index, 1);
+            updateInvalidAUList();
         }
         $scope.auReq = [
             {
@@ -104,4 +102,61 @@ angular.module('starfallxApp')
                 max: 9
             },
         ];
+        // $scope.onAUReqChange = function(autype) {
+
+        // }
+        // $scope.onAUReqWheel = function(autype) {
+
+        // }
+        // $scope.onAUReqBtnClick = function(autype) {
+
+        // }
+
+
+        $scope.buildingStarted = false;
+        $scope.invalidAUList = [];
+        function updateInvalidAUList() {
+            $scope.invalidAUList = [];
+            for (var i = 0; i < $scope.courseList.length; i++)
+                if ($scope.courseList[i].auTypesSelected == 0)
+                    $scope.invalidAUList.push($scope.courseList[i]);
+        }
+        $scope.error = {
+            needFixEmptyCourse: false,
+            needFixAUType: false,
+            emptyCourse: function() {
+                if ($scope.courseList.length > 0) {
+                    this.needFixEmptyCourse = false;
+                    return false;
+                } else if (this.needFixEmptyCourse)
+                    return true;
+                else 
+                    return false;
+            },
+            auType: function() {
+                if ($scope.invalidAUList.length == 0) {
+                    this.needFixAUType = false;
+                    return false;
+                } else if (this.needFixAUType)
+                    return true;
+                else 
+                    return false;
+            }
+        }
+        $scope.search = function () {
+            //can click search, 
+            if ($scope.courseList.length == 0) {
+                $scope.error.needFixEmptyCourse = true;
+                return;
+            }
+
+            if ($scope.invalidAUList.length > 0) {
+                $scope.error.needFixAUType = true;
+                return;
+            }
+            $scope.buildingStarted = true;
+            $timeout(function() {
+                $scope.buildingStarted = false;
+            }, 1500);
+        }
     });

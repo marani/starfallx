@@ -60,10 +60,18 @@
                         </button>
                     </span>
                 </div>
-                <!-- validation status -->
-                <div class="alert alert-danger" ng-show="newCourse.status.invalid && newCourse.status.submitted">Couldn't find <strong>{{newCourse.code}}</strong> this semester!</div>
-                <div class="alert alert-danger" ng-show="newCourse.status.added"><strong>{{newCourse.code}}</strong> is already added!</div>
             </form>
+        </div>
+
+
+        <!-- All validation statuses -->
+        <div class="alert alert-danger" ng-show="newCourse.status.invalid && newCourse.status.submitted">Couldn't find <strong>{{newCourse.code}}</strong> this semester!</div>
+        <div class="alert alert-danger" ng-show="newCourse.status.added"><strong>{{newCourse.code}}</strong> is already added!</div>
+        <div class="alert alert-danger" ng-show="error.emptyCourse()">
+            Please add courses you want to take.
+        </div>
+        <div class="alert alert-danger" ng-show="error.auType()">
+            Please select AU Type for <span ng-repeat="course in invalidAUList"><strong>{{course.code}}</strong><span ng-show="$index < invalidAUList.length - 1">, </span></span>.
         </div>
 
         <div class="ctn-course-list">
@@ -94,7 +102,12 @@
             </table>
         </div>
 
-        <button class="btn btn-success btn-block disabled"><strong>Find</strong></button>
+        <button 
+            class="btn btn-success btn-block" 
+            ng-disabled="buildingStarted"
+            ng-click="search()">
+            <strong>Find Possible Plans</strong>
+        </button>
     </div>
     <div class="col-lg-2 col-md-2 col-sm-2 container-col">
         <div class="row text-center col-head"><h4>Possible Plans</h4></div>
