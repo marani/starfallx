@@ -5,15 +5,15 @@ angular.module('starfallxApp')
         $scope.menu = [{
             'title': 'Build',
             'link': '/',
-            'icon': '"fa fa-flask fa-fw"'
+            'icon': '"fa fa-cubes fa-fw"'
         }, {
             'title': 'Saved',
             'link': '/saved',
-            'icon': '"fa fa-star fa-fw"'
+            'icon': '"fa fa-list fa-fw"'
         }, {
             'title': 'Tips',
             'link': '/tips', 
-            'icon': '"fa fa-lightbulb-o fa-fw"'
+            'icon': '"fa fa-question-circle fa-fw"'
         }
         // , {
         //     'title': 'About',

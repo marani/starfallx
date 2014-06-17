@@ -24,7 +24,7 @@ angular.module('starfallxApp')
             }
         };
 
-        $scope.loginFB = function(form) {
+        $scope.loginFB = function() {
             Auth.loginFB()
                 .then(function() {
                     $location.path('/');

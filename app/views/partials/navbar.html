@@ -30,7 +30,7 @@
                 <a href="/login"><i class="fa fa-fw fa-sign-in"></i> Login</a>
             </li>
             <li ng-hide="currentUser" ng-class="{active: isActive('/signup')}">
-                <a href="/signup"><i class="fa fa-fw fa-send-o"></i> Sign up</a>
+                <a href="/signup"><i class="fa fa-fw fa-send"></i> Sign up</a>
             </li>
             <li ng-show="currentUser" ng-class="{active: isActive('/profile')}">
                 <a href="/profile">{{ currentUser.name }}</a>

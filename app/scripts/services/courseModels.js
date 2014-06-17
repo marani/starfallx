@@ -7,9 +7,9 @@ angular.module('starfallxApp')
         this.indexes = params.indexes || [];
         this.examDate = params.examDate;
         this.aus = params.aus;
+        this.auTypes = params.auTypes;
 
         this.mutualExcusives = params.mutualExclusives || [];
-        this.auType = params.auType;
         this.preRequisite = params.preRequisite || [];
     })
     .service('Index', function(params) {

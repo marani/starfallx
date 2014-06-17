@@ -2,53 +2,106 @@
 
 angular.module('starfallxApp')
     .controller('BuildCtrl', function($scope, $http) {
-        // $http.get('/api/awesomeThings').success(function(awesomeThings) {
-        //     $scope.awesomeThings = awesomeThings;
-        // });
     })
-    .controller('PrefCtrl', function($scope, NTUScraper){
-        $scope.courses = ['IM4791', 'CE4015'];
-        $scope.autypes = ['Core', 'UE'];
-        $scope.autypes = {
-            'CORE': true,
-            'UE': false,
-            'PE': true
-        }
-        $scope.newCourse = {
-            name: '',
-            autypes: {
-            'CORE': false,
-            'UE': false,
-            'PE': false
+    .controller('PrefCtrl', function($scope, courseStore) {
+        function emptyNewCourse() {
+            return {
+                name: '',
+                code: '',
+                auTypes: {
+                    'CORE': false,
+                    'UE': false,
+                    'PE': false
+                },
+                status: {
+                    submitted: false,
+                    added: false,
+                    invalid: true
+                }
             }
         }
-        $scope.toggleAUType = function(course, autype) {
-            if (course.autypes) {
-                course.autypes[autype] = !course.autypes[autype];
-            } else 
-                $scope.autypes[autype] = !$scope.autypes[autype];
+        var acadTime = courseStore.getAcadTime();
+        $scope.year = acadTime.year;
+        $scope.sem = acadTime.sem;
+        $scope.courseList = [];
+        $scope.newCourse = emptyNewCourse();
+
+        // sync check
+        // $scope.$watch()
+        $scope.onCourseCodeChange = function() {
+            console.log('change!');
+            if ($scope.newCourse.code) 
+                $scope.newCourse.code = $scope.newCourse.code.trim().toUpperCase();
+
+            $scope.newCourse.status.submitted = false;
+
+            $scope.newCourse.status.added = false;
+            for (var i = 0; i < $scope.courseList.length; i++)
+                if ($scope.courseList[i].code == $scope.newCourse.code)
+                    $scope.newCourse.status.added = true;
+
+            $scope.newCourse.status.invalid = !($scope.newCourse.code) || 
+                !(($scope.newCourse.code.length >=5 ) && ($scope.newCourse.code.length <= 6) && 
+                /^[a-z]+[0-9]+[a-z]*$/i.test($scope.newCourse.code));
         }
+        // async check
         $scope.addCourse = function() {
-            console.log('adding new course...');
+            $scope.newCourse.status.submitted = true;
+            console.log('Searching for course...');
+
+            courseStore.getByCode($scope.newCourse.code, 
+                function success(course) {
+                    if (course && (course != "null")) {
+                        // console.log('table course', course.auTypes);
+                        // console.log('adder course', $scope.newCourse.auTypes);
+                        var auTypes = {
+                            'CORE': $scope.newCourse.auTypes['CORE']
+                        };
+                        for (var t in $scope.newCourse.auTypes)
+                            if ((t != 'CORE') && (course.auTypes.indexOf(t) > -1))
+                                auTypes[t] = $scope.newCourse.auTypes[t];
+                        // console.log('mixed', auTypes);
+                        course.auTypes = auTypes;
+                        $scope.courseList.push(course);
+                        $scope.newCourse = emptyNewCourse();
+                        console.log($scope.newCourse, $scope.newCourse.status.submitted && !$scope.newCourse.status.invalid);
+                    } else {
+                        $scope.newCourse.status.invalid = true;
+                    }
+                },
+                function error(err) {
+
+                }
+            );
         }
-        // $scope.indexes = ['36788', '36789', '36790', 'Any Index'];
-        // $scope.chosenIndex = $scope.indexes[0];
-        // $scope.pickIndex = function(index) {
-        //     $scope.chosenIndex = index;
-        //     $scope.status.isopen = false;
-        // }
-        // $scope.status = {
-        //     isopen: false
-        // }
-        $scope.pull = function () {
-            console.log('pulling data...');
-            NTUScraper.pull()
-                .success(function(data, status, headers, config) {
-                    console.log('data arrived');
-                    console.log(data);
-                })
-                .error(function(data, status, headers, config) {
-                    console.log('error', status, headers, config);
-                });
+
+        $scope.toggleAUType = function(course, autype) {
+            course.auTypes[autype] = !course.auTypes[autype];
+            console.log(course.auTypes);
         }
+        $scope.removeCourse = function(index) {
+            $scope.courseList.splice(index, 1);
+        }
+        $scope.auReq = [
+            {
+                reqType: "TOTAL",
+                min: 18,
+                max: 24
+            },
+            {
+                reqType: "CORE",
+                min: 12,
+                max: 21
+            },
+            {
+                reqType: "PE",
+                min: 0,
+                max: 9
+            },
+            {
+                reqType: "UE",
+                min: 0,
+                max: 9
+            },
+        ];
     });

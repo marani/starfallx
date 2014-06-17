@@ -1,47 +1,100 @@
-<div ng-include="'partials/navbar'"></div>
+<!-- <div ng-include="'partials/navbar'"></div> -->
 
 <div class="main-container-fixed">
     <div class="col-lg-3 col-md-3 col-sm-3 container-col" ng-controller="PrefCtrl">
         <div class="row text-center col-head"><h4>Your Preferences</h4></div>
-        <!-- <div class="h4">School / Year / AU</div> -->
-        <hr>
-        <form class="form" name="form" ng-submit="addCourse()" novalidate>
-            <div><strong>Enter Course Code</strong></div>
-            <div class="input-group course-input">
-                <input type="text" class="form-control" placeholder="e.g: IM4069..">
-                <span class="input-group-btn">
-                    <button class="btn btn-success" type="submit"><i class="fa fa-fw fa-plus"></i></button>
-                </span>
-            </div>
-
-            <div class="autype-row">
-                <span><strong>Select Type</strong></span> 
-                <button type="button" class="au-btn btn btn-xs" ng-class="{'btn-warning': newCourse.autypes['CORE']}" ng-click="toggleAUType(newCourse, 'CORE')">CORE</button>
-                <button type="button" class="au-btn btn btn-xs" ng-class="{'btn-warning': newCourse.autypes['PE']}" ng-click="toggleAUType(newCourse, 'PE')">PE</button> 
-                <button type="button" class="au-btn btn btn-xs" ng-class="{'btn-warning': newCourse.autypes['UE']}" ng-click="toggleAUType(newCourse, 'UE')">UE</button>
-            </div>
-
-            <!-- <button type="submit" class="add-course-btn btn btn-success btn-sm btn-block">
-                <i class="fa fa-fw fa-plus"></i> 
-                <strong>Click or Enter to Add</strong>
-            </button> -->
-        </form>
-        <hr>
-        <div class="pref-course-row panel panel-default" ng-repeat="course in courses">
-            <div class="col-xs-1 pref-course-index">
-                <strong>{{$index + 1}}</strong>
-            </div>
-            <div class="col-xs-11 pref-course-info">
-                <h4><strong>{{course}}</strong></h4> 
-
-                <div class="autype-row">
-                    <span>Type </span> 
-                    <button class="au-btn btn btn-xs" ng-class="{'btn-warning': autypes['CORE']}" ng-click="toggleAUType(course, 'CORE')">CORE</button>
-                    <button class="au-btn btn btn-xs" ng-class="{'btn-warning': autypes['PE']}" ng-click="toggleAUType(course, 'PE')">PE</button> 
-                    <button class="au-btn btn btn-xs" ng-class="{'btn-warning': autypes['UE']}" ng-click="toggleAUType(course, 'UE')">UE</button>
-                </div>
-            </div>
+        <!-- <div class="acad-time text-center"><h4>Semester {{sem}} {{year}}-{{year + 1}}</h4></div> -->
+        <div class="ctn-au-req">
+            <div class="text-center"><strong>AU Requirement</strong></div>
+            <table class="au-table table table-striped table-condensed">
+                <tbody><tr>
+                    <td><strong>Type</strong></td>
+                    <td><strong>Min</strong></td>
+                    <td><strong>Max</strong></td>
+                </tr></tbody>
+                <tbody>
+                <tr ng-repeat="req in auReq">
+                    <td><strong>{{req.reqType}}</strong></td>
+                    <td>
+                        <button class="btn btn-xs btn-default"><i class="fa fa-fw fa-chevron-left"></i></button>
+                        <input type="text" class="au-input form-control" ng-model="req.min">
+                        <button class="btn btn-xs btn-default"><i class="fa fa-fw fa-chevron-right"></i></button>
+                    </td>
+                    <td>
+                        <button class="btn btn-xs btn-default"><i class="fa fa-fw fa-chevron-left"></i></button>
+                        <input type="text" class="au-input form-control" ng-model="req.max">
+                        <button class="btn btn-xs btn-default"><i class="fa fa-fw fa-chevron-right"></i></button>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
+
+        <div class="ctn-course-adder">
+            <div class="text-center"><strong>Courses you want</strong></div>
+            <form class="form course-form" ng-submit="addCourse()" novalidate>
+                <div class="input-group course-input form-group">
+                    <input 
+                        type="text" 
+                        class="form-control" 
+                        placeholder="e.g: IM4069.." 
+                        ng-model="newCourse.code"
+                        ng-change="onCourseCodeChange()"
+                        ng-class="{'sf-input-danger': newCourse.status.added || (newCourse.status.invalid && newCourse.status.submitted)}"
+                        ng-disabled="!newCourse.status.invalid && newCourse.status.submitted"
+                        required>
+                        <!-- 
+                        name="courseCode"
+                        ng-minlength="5"
+                        ng-maxlength="6" -->
+                    <span class="input-group-btn">
+                        <button 
+                            class="btn btn-success" 
+                            ng-disabled="newCourse.status.invalid || newCourse.status.added || 
+                                (!newCourse.status.invalid && newCourse.status.submitted)"
+                            type="submit">
+                            <i 
+                                class="fa fa-fw fa-plus"
+                                ng-class="{'fa-spin': !newCourse.status.invalid && newCourse.status.submitted}">
+                            </i>
+                        </button>
+                    </span>
+                </div>
+                <!-- validation status -->
+                <div class="alert alert-danger" ng-show="newCourse.status.invalid && newCourse.status.submitted">Couldn't find <strong>{{newCourse.code}}</strong> this semester!</div>
+                <div class="alert alert-danger" ng-show="newCourse.status.added"><strong>{{newCourse.code}}</strong> is already added!</div>
+            </form>
+        </div>
+
+        <div class="ctn-course-list">
+            <div class="status"></div>
+            <table ng-show="(courseList.length > 0)" class="course-table table table-striped table-condensed table-bordered">
+                <tbody>
+                    <tr>
+                        <td></td>
+                        <td><strong>Code</strong> (AU)</td>
+                        <td><strong>Type</strong></td>
+                        <td></td>
+                    </tr>
+                </tbody>
+                <tbody ui-sortable ng-model="courseList">
+                    <tr ng-repeat="course in courseList">
+                        <td><strong>{{$index + 1}}</strong></td>
+                        <td><strong>{{course.code}}</strong> ({{course.aus}})</td>
+                        <td>
+                            <button ng-click="toggleAUType(course, 'CORE')" class="au-btn btn btn-xs" ng-class="{'btn-success': course.auTypes['CORE']}">CORE</button>
+                            <button ng-click="toggleAUType(course, 'PE')" class="au-btn btn btn-xs" ng-class="{'btn-success': course.auTypes['PE']}" ng-show="!(course.auTypes['PE'] === undefined)" >PE</button> 
+                            <button ng-click="toggleAUType(course, 'UE')" class="au-btn btn btn-xs" ng-class="{'btn-success': course.auTypes['UE']}" ng-show="!(course.auTypes['UE'] === undefined)" >UE</button>
+                        </td>
+                        <td>
+                            <button ng-click="removeCourse($index)" class="btn btn-xs btn-default remove-course-btn" ><i class="fa fa-times fa-fw"></i></button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <button class="btn btn-success btn-block disabled"><strong>Find</strong></button>
     </div>
     <div class="col-lg-2 col-md-2 col-sm-2 container-col">
         <div class="row text-center col-head"><h4>Possible Plans</h4></div>
