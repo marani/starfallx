@@ -1,5 +1,7 @@
 angular.module('starfallxApp')
     .factory('courseStore', function ($http, $timeout){
+        var courseDict = []; // in-memory layer 
+
         return {
             getAcadTime: function() {
                 return {
@@ -7,8 +9,11 @@ angular.module('starfallxApp')
                     sem: 1
                 }
             },
+            init: function() {
+                
+            },
             getByCode: function(code, successHandler, errorHandler) {
-                //if not in localStore -> check remote store
+                //if not in memory -> check remote store
                 //remote store 
                 //  -> exist -> store in exist dict
                 //  -> not exist -> store not exist dict

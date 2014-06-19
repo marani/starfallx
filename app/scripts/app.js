@@ -7,7 +7,9 @@ angular.module('starfallxApp', [
     'ngRoute',
     'ui.bootstrap',
     'ui.sortable',
-    'pouchdb'
+    'pouchdb',
+    'perfect_scrollbar'
+    // 'ngScrollbar'
 ])
     .config(function($routeProvider, $locationProvider, $httpProvider) {
         $routeProvider
