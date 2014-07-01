@@ -2,133 +2,75 @@
 
 <div class="main-container-fixed">
     <div class="main-container-tr">
-        <div class="col-lg-3 col-md-3 col-sm-3 container-col course-pref-col" ng-controller="PrefCtrl" pref-panel>
-            <!-- V2 Features -->
-            <!-- <div class="row text-center col-head"><h4>Your Preferences</h4></div> -->
-            
-            <!--TODO: add switch: simple check vs normal check-->
-            <!--<div class="ctn-au-req">
-                <div class="text-center"><strong>AU Requirement</strong></div>
-                <table class="au-table table table-striped table-condensed">
-                    <tbody><tr>
-                        <td><strong>Type</strong></td>
-                        <td><strong>Min</strong></td>
-                        <td><strong>Max</strong></td>
-                    </tr></tbody>
+        <div 
+            class="col-lg-5 col-md-5 col-sm-5 container-col course-pref-col" 
+            ng-controller="FilterCtrl"
+            filter-panel>
+
+            <div class="col-head row text-center row"><h4>Filter</h4></div>
+            <div class="hidden-xs ctn-course-table-head">
+                <table class="course-table-head table table-striped table-condensed table-bordered">
                     <tbody>
-                    <tr ng-repeat="req in auReq">
-                        <td><strong>{{req.reqType}}</strong></td>
-                        <td>
-                            <button class="btn btn-xs btn-default"><i class="fa fa-fw fa-chevron-left"></i></button>
-                            <input type="text" class="au-input form-control" ng-model="req.min">
-                            <button class="btn btn-xs btn-default"><i class="fa fa-fw fa-chevron-right"></i></button>
-                        </td>
-                        <td>
-                            <button class="btn btn-xs btn-default"><i class="fa fa-fw fa-chevron-left"></i></button>
-                            <input type="text" class="au-input form-control" ng-model="req.max">
-                            <button class="btn btn-xs btn-default"><i class="fa fa-fw fa-chevron-right"></i></button>
-                        </td>
-                    </tr>
+                        <tr>
+                            <td></td>
+                            <td><strong>Courses</strong></td>
+                            <td><strong>Indexes</strong></td>
+                            <td><strong>Hidden</strong></td>
+                        </tr>
                     </tbody>
                 </table>
             </div>
 
-            <div class="ctn-course-adder">
-                <div class="text-center"><strong>Courses you want</strong></div>
-                <form class="form course-form" ng-submit="addCourse()" novalidate>
-                    <div class="input-group course-input form-group">
-                        <input 
-                            type="text" 
-                            class="form-control" 
-                            placeholder="e.g: IM4069.." 
-                            ng-model="newCourse.code"
-                            ng-change="onCourseCodeChange()"
-                            ng-class="{'sf-input-danger': newCourse.status.added || (newCourse.status.invalid && newCourse.status.submitted)}"
-                            ng-disabled="!newCourse.status.invalid && newCourse.status.submitted"
-                            required>
-                        <span class="input-group-btn">
-                            <button 
-                                class="btn btn-success" 
-                                ng-disabled="newCourse.status.invalid || newCourse.status.added || 
-                                    (!newCourse.status.invalid && newCourse.status.submitted)"
-                                type="submit">
-                                <i 
-                                    class="fa fa-fw fa-plus"
-                                    ng-class="{'fa-spin': !newCourse.status.invalid && newCourse.status.submitted}">
-                                </i>
-                            </button>
-                        </span>
-                    </div>
-                </form>
-            </div> -->
 
-            <!-- All validation statuses -->
-            <!-- <div class="alert alert-danger" ng-show="newCourse.status.invalid && newCourse.status.submitted">Couldn't find <strong>{{newCourse.code}}</strong> this semester!</div>
-            <div class="alert alert-danger" ng-show="newCourse.status.added"><strong>{{newCourse.code}}</strong> is already added!</div>
-            <div class="alert alert-danger" ng-show="error.emptyCourse()">
-                Please add courses you want to take.
-            </div>
-            <div class="alert alert-danger" ng-show="error.auType()">
-                Please select AU Type for <span ng-repeat="course in invalidAUList"><strong>{{course.code}}</strong><span ng-show="$index < invalidAUList.length - 1">, </span></span>.
-            </div> -->
-            <!-- End V2 Features -->
-            <div class="col-head row text-center row"><h4>Courses You Like</h4></div>
-            <div class="ctn-course-adder">
-                <form class="form course-form" ng-submit="addCourse()" novalidate>
-                    <div class="input-group course-input form-group">
-                        <input 
-                            type="text" 
-                            class="form-control" 
-                            placeholder="e.g: IM4069.." 
-                            ng-model="newCourse.code"
-                            ng-change="onCourseCodeChange()"
-                            ng-class="{'sf-input-danger': newCourse.status.added || (newCourse.status.invalid && newCourse.status.submitted)}"
-                            ng-disabled="!newCourse.status.invalid && newCourse.status.submitted"
-                            required>
-                        <span class="input-group-btn">
-                            <button 
-                                class="btn btn-success" 
-                                ng-disabled="newCourse.status.invalid || newCourse.status.added || 
-                                    (!newCourse.status.invalid && newCourse.status.submitted)"
-                                type="submit">
-                                <i 
-                                    class="fa fa-fw fa-plus"
-                                    ng-class="{'fa-spin': !newCourse.status.invalid && newCourse.status.submitted}">
-                                </i>
-                            </button>
-                        </span>
-                    </div>
-                </form>
-            </div> 
-            <div class="ctn-alert">
-                <!-- All validation statuses -->
-                <!-- <div class="alert alert-danger" ng-show="error.auType()">
-                    Please select AU Type for <span ng-repeat="course in invalidAUList"><strong>{{course.code}}</strong><span ng-show="$index < invalidAUList.length - 1">, </span></span>.
-                </div> -->
-                <div class="alert alert-danger" show-and-emit="newCourse.status.invalid && newCourse.status.submitted">Couldn't find <strong>{{newCourse.code}}</strong> this semester!</div>
-                <div class="alert alert-danger" show-and-emit="newCourse.status.added"><strong>{{newCourse.code}}</strong> is already added!</div>
-                <div class="alert alert-danger" show-and-emit="error.emptyCourse()">Please add courses you want to take.</div>
-            </div>
-            <!-- <div class="ctn-course-list flexPanel scrollme" ng-scrollbar rebuild-on="rebuild:me"> -->
-            <!-- <perfect-scrollbar class="ctn-course-list flexPanel scroller" wheel-propagation="true" wheel-speed="50" update="updateScroll">
+            <sf-perfect-scrollbar 
+                class="hidden-xs ctn-course-list scroll-panel" 
+                wheel-propagation="true" 
+                wheel-speed="7" 
+                ng-mousewheel="handleMouseWheel"
+                update="updateScroll" >
                 <table ng-show="(courseList.length > 0)" class="course-table table table-striped table-condensed table-bordered">
-                    <tbody>
-                        <tr>
+                    <!-- <tbody>
+                        <tr class="tr-head-float">
                             <td></td>
-                            <td><strong>Code</strong> (AU)</td>
-                            <td><strong>Title</strong></td>
-                            <td></td>
+                            <td><strong>Code</strong></td>
+                            <td><strong>Select Index</strong></td>
+                            <td><strong></strong></td>
                         </tr>
-                    </tbody>
+                        <tr class="tr-head-fixed">
+                            <td></td>
+                            <td><strong>Code</strong></td>
+                            <td><strong>Select Index</strong></td>
+                            <td><strong></strong></td>
+                        </tr>
+                    </tbody> -->
                     <tbody ui-sortable ng-model="courseList">
-                        <tr ng-repeat="course in courseList">
+                        <tr ng-repeat="course in courseList track by course.code"  title="{{course.code + ' - ' + course.title + ' (' + course.aus +' AU)'}}">
                             <td><strong>{{$index + 1}}</strong></td>
-                            <td><strong>{{course.code}}</strong> ({{course.aus}})</td>
-                            <td title="{{course.title}}">
-                                {{course.title}}
+                            <td><strong>{{course.code}}</strong></td>
+                            <td> 
+                                <button 
+                                    ng-repeat="index in course.indexes"
+                                    class="index-btn btn btn-xs"
+                                    ng-class="{'btn-success': index.selected}"
+                                    ng-show="index.visible || course.showHiddenIndex"
+                                    ng-click="toggleSelected(course, $index)">
+                                    {{index.code}}
+                                </button>
                             </td>
-                            <td>
-                                <button ng-click="removeCourse($index)" class="btn btn-xs btn-default remove-course-btn" ><i class="fa fa-times fa-fw"></i></button>
+                            <td title="Click to toggle">
+                                <button 
+                                    ng-click="toggleHiddenIndex(course)" 
+                                    ng-disabled="course.hiddenIndexCount == 0" 
+                                    ng-class="{'btn-success': course.showHiddenIndex}"
+                                    class="btn btn-xs btn-hi">
+                                    <span ng-show="course.showHiddenIndex" class="btn-hi-show">
+                                        <!-- <strong>{{course.hiddenIndexCount}} </strong> -->
+                                        <strong>{{course.hiddenIndexCount}}</strong>
+                                    </span>
+                                    <span ng-show="!course.showHiddenIndex" ng-class="{'btn-hi-hide-hl': course.hiddenIndexCount > 0}" class="btn-hi-hide">
+                                        <strong>{{course.hiddenIndexCount}}</strong>
+                                    </span>
+                                </button>
                             </td>
                         </tr>
                     </tbody>
@@ -141,47 +83,10 @@
                         <strong>Find Possible Plans</strong>
                     </button>
                 </div>
-            </perfect-scrolbar> -->
-            <div class="ctn-course-list visible-xs">
-                <table ng-show="(courseList.length > 0)" class="course-table table table-striped table-condensed table-bordered">
-                    <tbody>
-                        <tr>
-                            <td></td>
-                            <td><strong>Code</strong> (AU)</td>
-                            <td><strong>Title</strong></td>
-                            <td></td>
-                        </tr>
-                    </tbody>
-                    <tbody ui-sortable ng-model="courseList">
-                        <tr ng-repeat="course in courseList">
-                            <td><strong>{{$index + 1}}</strong></td>
-                            <td><strong>{{course.code}}</strong> ({{course.aus}})</td>
-                            <td title="{{course.title}}">
-                                {{course.title}}
-                            </td>
-                            <td>
-                                <button ng-click="removeCourse($index)" class="btn btn-xs btn-default remove-course-btn" ><i class="fa fa-times fa-fw"></i></button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="ctn-find-btn visible-xs">
-                    <button 
-                        class="btn btn-success btn-block"
-                        ng-disabled="buildingStarted"
-                        ng-click="search()">
-                        <strong>Find Possible Plans</strong>
-                    </button>
-                </div>
-            </div>
-            <!-- <div class="ctn-find-btn ctn-find-btn-fixed visible-xs">
-                <button 
-                    class="btn btn-success btn-block find-btn find-btn-fixed"
-                    ng-disabled="buildingStarted"
-                    ng-click="search()">
-                    <strong>Find Possible Plans</strong>
-                </button>
-            </div> -->
+            </sf-perfect-scrollbar>
+
+            <div class="hidden-xs border-grad border-grad-top"><div></div></div>
+            <div class="hidden-xs border-grad border-grad-btm"><div></div></div>
 
             <div class="ctn-find-btn ctn-find-btn-fixed hidden-xs">
                 <button 
@@ -192,30 +97,47 @@
                 </button>
             </div>
 
-            <perfect-scrollbar 
-                class="ctn-course-list flexPanel scroller hidden-xs" 
-                wheel-propagation="true" 
-                wheel-speed="50" 
-                update="updateScroll" 
-                perfect-scrollbar>
-                <table ng-show="(courseList.length > 0)" class="course-table table table-striped table-condensed table-bordered">
+
+            <div class="visible-xs ctn-course-list">
+                <table 
+                    ng-show="(courseList.length > 0)" 
+                    class="course-table table table-striped table-condensed table-bordered">
                     <tbody>
                         <tr>
                             <td></td>
-                            <td><strong>Code</strong> (AU)</td>
-                            <td><strong>Title</strong></td>
-                            <td></td>
+                            <td><strong>Courses</strong></td>
+                            <td><strong>Indexes</strong></td>
+                            <td><strong>Hidden</strong></td>
                         </tr>
                     </tbody>
                     <tbody ui-sortable ng-model="courseList">
-                        <tr ng-repeat="course in courseList">
+                        <tr ng-repeat="course in courseList track by course.code"  title="{{course.code + ' - ' + course.title + ' (' + course.aus +' AU)'}}">
                             <td><strong>{{$index + 1}}</strong></td>
-                            <td><strong>{{course.code}}</strong> ({{course.aus}})</td>
-                            <td title="{{course.title}}">
-                                {{course.title}}
+                            <td><strong>{{course.code}}</strong></td>
+                            <td> 
+                                <button 
+                                    ng-repeat="index in course.indexes"
+                                    class="index-btn btn btn-xs"
+                                    ng-class="{'btn-success': index.selected}"
+                                    ng-show="index.visible || course.showHiddenIndex"
+                                    ng-click="toggleSelected(course, $index)"
+                                    ng-mousewheel="">
+                                    {{index.code}}
+                                </button>
                             </td>
-                            <td>
-                                <button ng-click="removeCourse($index)" class="btn btn-xs btn-default remove-course-btn" ><i class="fa fa-times fa-fw"></i></button>
+                            <td title="Click to toggle">
+                                <button 
+                                    ng-click="toggleHiddenIndex(course)" 
+                                    ng-disabled="course.hiddenIndexCount == 0" 
+                                    ng-class="{'btn-success': course.showHiddenIndex}"
+                                    class="btn btn-xs btn-hi">
+                                    <span ng-show="course.showHiddenIndex" class="btn-hi-show">
+                                        <strong>{{course.hiddenIndexCount}}</strong>
+                                    </span>
+                                    <span ng-show="!course.showHiddenIndex" ng-class="{'btn-hi-hide-hl': course.hiddenIndexCount > 0}" class="btn-hi-hide">
+                                        <strong>{{course.hiddenIndexCount}}</strong>
+                                    </span>
+                                </button>
                             </td>
                         </tr>
                     </tbody>
@@ -228,16 +150,78 @@
                         <strong>Find Possible Plans</strong>
                     </button>
                 </div>
-            </perfect-scrollbar>
-            <div class="border-grad border-grad-top"><div></div></div>
-            <div class="border-grad border-grad-btm"><div></div></div>
+            </div>
+        </div>
+
+        <div 
+            class="col-lg-7 col-md-7 col-sm-7 container-col result-col" 
+            ng-controller="ResultCtrl"
+            result-panel> 
+            <div class="row text-center col-head">
+                <h4>
+                    Possible Plans 
+                    <span class="result-count-badge" ng-show="result.list">{{result.list.length}}</span>
+                </h4>
+            </div>
+
+            <div
+                class="hidden-xs ctn-result-table-head"
+                ng-show="result.list.length > 0">
+                <table class="result-table-head table table-striped table-condensed table-bordered">
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td ng-repeat="code in result.courseOrder"><strong>{{code}}</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div 
+                ng-show="result.list && result.list.length === 0"
+                class="h5 text-center no-result-message">
+                    <strong>Impossibruuu :(
+                    <br>
+                    Adding more Indexes or removing some Course might help.</strong>
+            </div>
+
+            <div ng-show="result.list.length > 0" class="hidden-xs border-grad border-grad-top"><div></div></div>
+            <div ng-show="result.list.length > 0" class="hidden-xs border-grad border-grad-btm"><div></div></div>
+            <sf-perfect-scrollbar
+                class="hidden-xs ctn-result-list scroll-panel" 
+                wheel-propagation="true" 
+                wheel-speed="7" 
+                ng-mousewheel="handleMouseWheel"
+                update="updateScroll" >
+                <table ng-show="(result.list.length > 0)" class="result-table table table-striped table-condensed table-bordered table-hover">
+                    <tbody>
+                        <tr ng-repeat="indexArr in result.list">
+                            <td><strong>{{$index + 1}}</strong></td>
+                            <td ng-repeat="index in indexArr">{{index}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </sf-perfect-scrollbar>
             
-        </div>
-        <div class="col-lg-2 col-md-2 col-sm-2 container-col result-col">
-            <div class="row text-center col-head"><h4>Possible Plans</h4></div>
-        </div>
-        <div class="col-lg-7 col-md-7 col-sm-7 container-col result-detail-col">
-            <div class="row text-center col-head"><h4>Detail</h4></div>
+
+            <div class="visible-xs ctn-result-list">
+
+                <table ng-show="(result.list.length > 0)" class="result-table table table-striped table-condensed table-bordered table-hover">
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td ng-repeat="code in result.courseOrder"><strong>{{code}}</strong></td>
+                        </tr>
+                    </tbody>
+                    <tbody>
+                        <tr ng-repeat="indexArr in result.list">
+                            <td><strong>{{$index + 1}}</strong></td>
+                            <td ng-repeat="index in indexArr">{{index}}</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
         </div>
     </div>
 </div>
