@@ -75,21 +75,30 @@ angular.module('starfallxApp', [
             }
         ]);
     })
-    .run(function($rootScope, $location, Auth, courseStore, md5) {
+    .run(function($rootScope, $location, Auth, courseStore, md5, $routeParams) {
         // Redirect to login if route requires auth and you're not logged in
-        var dataParsed = false;
+        var dataRetrieved = false;
         $rootScope.$on('$routeChangeStart', function(event, next) {
-            if (($location.path() == '/build') && !dataParsed) {
-                var data = $location.search();
+            console.log('route start');
+            console.log('checking on build & build params ... require init? ...', ($location.path().indexOf('/build') === 0) && (!dataRetrieved));
+            if (($location.path() == '/build') && !dataRetrieved) {
+                try { 
+                    var data = JSON.parse(atob($location.search().q));
+                } catch (e) {
+                    console.log('parse error');
+                    $location.path('/');
+                    return;
+                }
+                console.log(data);
                 var hash = data.h;
                 var jsonStr = data.d
                 if ((hash) && (jsonStr)) {
-                    var jsonStr = jsonStr.replace(/\+/g, ' ');
+                    // var jsonStr = jsonStr.replace(/\\/g, ' ');
                     // console.log(jsonStr);
                     // console.log(hash);
                     // console.log(md5.createHash(jsonStr));
                     if (hash == md5.createHash(jsonStr)) {
-                        dataParsed = true;
+                        dataRetrieved = true;
                         courseStore.init(JSON.parse(jsonStr));
                         // $location.search({});
                         // $location.path('/build');
@@ -98,6 +107,42 @@ angular.module('starfallxApp', [
                 } else
                     $location.path('/');
             }
+        });
+
+        // var dataRetrieved = false;
+        // $rootScope.$on('$routeChangeSuccess', function(evt, current) {
+        //     console.log('-------------');
+        //     console.log('route success');
+        //     console.log(current);
+        //     console.log('checking on build & build params ... require init? ...', ($location.path().indexOf('/build') === 0) && (!dataRetrieved));
+        //     if (($location.path().indexOf('/build') === 0) && (!dataRetrieved)) {
+        //         try { 
+        //             var data = JSON.parse(atob($routeParams.data));
+        //         } catch (e) {
+        //             $location.path('/');
+        //             return;
+        //         }
+        //         var jsonStr = data.d;
+        //         var hash = data.h;
+        //         // console.log(hash && jsonStr);
+        //         if ((hash) && (jsonStr)) {
+        //             var jsonStr = jsonStr.replace(/\\/g, ' ');
+        //             // console.log(jsonStr);
+        //             // console.log(hash);
+        //             // console.log(md5.createHash(jsonStr));
+        //             if (hash == md5.createHash(jsonStr)) {
+        //                 courseStore.init(JSON.parse(jsonStr));
+        //                 dataRetrieved = true;
+        //                 console.log(dataRetrieved, 'change to build');
+        //                 $location.path('/build/_');
+        //                 evt.preventDefault();
+        //             } else 
+        //                 $location.path('/');
+        //         } else
+        //             $location.path('/');
+        //     }
+        // })
+        $rootScope.$on('$routeChangeStart', function(event, next) {
             if (next.authenticate && !Auth.isLoggedIn()) {
                 $location.path('/login');
             }

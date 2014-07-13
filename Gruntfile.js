@@ -48,7 +48,7 @@ module.exports = function(grunt) {
         },
         watch: {
             js: {
-                files: ['<%= yeoman.app %>/scripts/{,*/}*.js'],
+                files: ['<%= yeoman.app %>/scripts/{,*/}*.js', '<%= yeoman.app %>/bookmarklets/{,*/}*.js'],
                 // tasks: ['newer:jshint:all'],
                 options: {
                     livereload: true
@@ -333,19 +333,20 @@ module.exports = function(grunt) {
         // Copies remaining files to places other tasks can use
         copy: {
             dist: {
-                files: [{
+                files: [{ 
                     expand: true,
                     dot: true,
                     cwd: '<%= yeoman.app %>',
                     dest: '<%= yeoman.dist %>/public',
                     src: [
+                        // 'bookmarklets/{,*/}.js',
                         '*.{ico,png,txt}',
                         '.htaccess',
                         'bower_components/**/*',
                         'images/{,*/}*.{webp}',
                         'fonts/**/*'
                     ]
-                }, {
+                }, { 
                     expand: true,
                     dot: true,
                     cwd: '<%= yeoman.app %>/views',
@@ -412,15 +413,22 @@ module.exports = function(grunt) {
         //     }
         //   }
         // },
-        // uglify: {
-        //   dist: {
-        //     files: {
-        //       '<%= yeoman.dist %>/scripts/scripts.js': [
-        //         '<%= yeoman.dist %>/scripts/scripts.js'
-        //       ]
-        //     }
-        //   }
-        // },
+        uglify: {
+            dist: {
+                // files: {
+                //     '<%= yeoman.dist %>/bookmarklets/*.js': [
+                //         '<%= yeoman.dist %>/bookmarklets/scripts.js'
+                //     ]
+                // }
+                files: [{
+                    expand: true,
+                    // dot: true,
+                    cwd: '<%= yeoman.app %>/bookmarklets/',
+                    src: '*.js',
+                    dest: '<%= yeoman.dist %>/public/bookmarklets/'
+                }]
+            }
+        },
         // concat: {
         //   dist: {}
         // },

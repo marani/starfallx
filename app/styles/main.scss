@@ -62,7 +62,6 @@ $lighten-3: lighten($sf-red, 23%);
     width: 560px;
     ul, li { list-style-type: circle; }
     * { line-height: 150%; }
-    a * { line-height: normal; }
     .bookmarklet {
         // display: block;
         // margin: auto;
@@ -76,6 +75,7 @@ $lighten-3: lighten($sf-red, 23%);
         font-size: 20px;
         border-radius: 5px;
         text-decoration: none;
+        a, span { line-height: normal; }
     }
     blockquote {
         color: red;
