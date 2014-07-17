@@ -9,8 +9,8 @@ angular.module('starfallxApp')
             // scope: true,
             restrict: 'A',
             link: function(scope, el, attrs) {
-                var floatCtn = $('.ctn-find-btn-float');
-                var fixedCtn = $('.ctn-find-btn-fixed');
+                var floatCtn = $('.ctn-btn-float');
+                var fixedCtn = $('.ctn-btn-fixed');
                 var flexPanel = $('.flexPanel');
                 var alertCtn = $('.ctn-alert');
                 var bgTop = $('.border-grad-top');
@@ -106,7 +106,7 @@ angular.module('starfallxApp')
                 }
                 $elem.on('mousewheel wheel', function() {
                     updateBorderGrad();
-                })
+                });
                 $scope.$on($attr.update, function() {
                     // console.log('scroll updating...');
                     updateScrollBar();
@@ -170,12 +170,12 @@ angular.module('starfallxApp')
             }
         }
     })
-    .directive('filterPanel', function($window) {
+    .directive('leftPanel', function($window) {
         return {
             restrict: 'A',
             link: function($scope, $elem, attrs) {
-                var floatCtn = $elem.find('.ctn-find-btn-float');
-                var fixedCtn = $elem.find('.ctn-find-btn-fixed');
+                var floatCtn = $elem.find('.ctn-btn-float');
+                var fixedCtn = $elem.find('.ctn-btn-fixed');
                 var scrollPanel = $elem.find('.scroll-panel');
                 var bgTop = $elem.find('.border-grad-top');
                 var bgBtm = $elem.find('.border-grad-btm');
@@ -204,28 +204,24 @@ angular.module('starfallxApp')
                         if (scrollPanel.prop('scrollHeight') > scrollPanel.height()) 
                             showFixed();
                         else
-                            showFloat();    
+                            showFloat();  
+                        $scope.$emit('updateScroll', {});  
                     }, 10);
-                    
-                    $scope.$emit('updateScroll', {});
                 }
-
+                // $elem.on('mousewheel wheel', function() {
+                //     updateLayout();
+                // });
                 scrollPanel.on('DOMSubtreeModified', function() {
                     // console.log('sub tree modified');
                     updateLayout();
                 });
-                // scrollPanel.find('td').each(function() {
-                //     $(this).on('DOMSubtreeModified', function() {
-                //         console.log('layout update from directive');
-                //         updateLayout();
-                //     })
-                // });
                 $($window).on('resize', function() {
                     // console.log('win resize');
                     updateLayout();
                 });
                 $scope.$on('layoutChange', function() {
                     // console.log('layout update from controller');
+                    scrollPanel.scrollTop(0);
                     updateLayout();
                 });
             }

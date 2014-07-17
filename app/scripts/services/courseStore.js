@@ -1,5 +1,18 @@
+/* 
+    mixins for course model to support selection/hidden index functions
+    
+    course.selectedIndexes
+    course.selected.all
+    course.selected.none
+    course.hiddenIndexCount
+    course.visibleIndexCount
+    course.showHiddenIndex
+    course.indexes[i].selected
+    course.indexes[i].visible
+    
+*/
 angular.module('starfallxApp')
-    .factory('courseStore', function ($http, $timeout, pouchdb){
+    .factory('CourseStore', function ($http, $timeout, pouchdb){
         var acadTime = {
             year: 2014,
             sem: 1
@@ -29,11 +42,12 @@ angular.module('starfallxApp')
                             courseFilter[code].indexDict[indexCode] = true;
                         });
                 }
-                // memcache
+                // load local in-disk db to in-mem cache
                 var count = 0;
                 db.allDocs({ include_docs: true })
                     .then(function(collection) {
-                        // row in rows: row.doc <- content
+                        // row in rows: 
+                        //   row.doc <- content
                         collection.rows.forEach(function(row) {
                             courseDict[row.doc._id] = row.doc.content;
                         });
@@ -44,12 +58,15 @@ angular.module('starfallxApp')
                     .finally((function() {
                         for (var code in courseFilter) {
                             this.getByCode(code,
-                                function success(courseData) {
-                                    courseDict[code] = courseData;
+                                function success(code) {
+                                    // console.log('successfully loaded course: ', code);
                                     courseDict[code].examDate = courseFilter[code].examDate;
                                     
                                     count++;
-                                    if (count == filterLen) initDone = true;
+                                    if (count == filterLen)  { 
+                                        initDone = true; 
+                                        // console.log(courseDict); 
+                                    }
                                 });
                         }
                         // console.log(courseDict);
@@ -80,8 +97,8 @@ angular.module('starfallxApp')
                 //  -> not exist -> store not exist dict
                 var acadTime = this.getAcadTime();
                 if (courseDict[code]) {
-                    if (successHandler) successHandler(courseDict[code]);
-                    // console.log('retrieved from mem cache');
+                    // console.log('retrieved from in-mem cache');
+                    if (code, successHandler) successHandler(code, courseDict[code]);
                 }
                 else
                     $http({
@@ -93,12 +110,12 @@ angular.module('starfallxApp')
                             content: courseData
                         }).then(function(err, result) {
                             // console.log('db save successfully');
-                            // console.log('retrieved from remote db');
+                            // console.log('retrieved from remote db: ', code);
                             // to avoid courseData manipulation 
                             courseDict[code] = courseData;
                             if (courseData != "null")
                                 validCourseDict[code] = courseData;
-                            if (successHandler) successHandler(courseData);
+                            if (successHandler) successHandler(code, courseData);
                         });
                     }).error(function(data, status, headers, config) {
                         if (errorHandler) errorHandler(status);

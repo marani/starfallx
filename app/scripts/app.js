@@ -75,12 +75,12 @@ angular.module('starfallxApp', [
             }
         ]);
     })
-    .run(function($rootScope, $location, Auth, courseStore, md5, $routeParams) {
+    .run(function($rootScope, $location, Auth, CourseStore, md5, $routeParams) {
         // Redirect to login if route requires auth and you're not logged in
         var dataRetrieved = false;
         $rootScope.$on('$routeChangeStart', function(event, next) {
-            console.log('route start');
-            console.log('checking on build & build params ... require init? ...', ($location.path().indexOf('/build') === 0) && (!dataRetrieved));
+            // console.log('route start');
+            // console.log('checking on build & build params ... require init? ...', ($location.path().indexOf('/build') === 0) && (!dataRetrieved));
             if (($location.path() == '/build') && !dataRetrieved) {
                 try { 
                     var data = JSON.parse(atob($location.search().q));
@@ -89,7 +89,7 @@ angular.module('starfallxApp', [
                     $location.path('/');
                     return;
                 }
-                console.log(data);
+                // console.log(data);
                 var hash = data.h;
                 var jsonStr = data.d
                 if ((hash) && (jsonStr)) {
@@ -99,7 +99,7 @@ angular.module('starfallxApp', [
                     // console.log(md5.createHash(jsonStr));
                     if (hash == md5.createHash(jsonStr)) {
                         dataRetrieved = true;
-                        courseStore.init(JSON.parse(jsonStr));
+                        CourseStore.init(JSON.parse(jsonStr));
                         // $location.search({});
                         // $location.path('/build');
                     } else 

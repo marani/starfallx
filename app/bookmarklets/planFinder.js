@@ -1,6 +1,5 @@
 (function(bs) {
     (function(e, a, g, h, f, c, b, d) {
-        console.log(f = e.jQuery); console.log(g);
         if (!(f = e.jQuery) || (g > f.fn.jquery) || h(f)) {
             var c = a.createElement("script"); 
             c.type = "text/javascript";
@@ -13,7 +12,6 @@
                 };
             else
                 c.onload = function() {
-                    console.log('onload'); console.log($);
                     if (!b && (!(d = this.readyState) || d == "loaded" || d == "complete")) {
                         h((f = e.jQuery).noConflict(1), b = 1);
                         f(c).remove();
@@ -21,8 +19,10 @@
                 };
             c.src = "//ajax.googleapis.com/ajax/libs/jquery/" + g + "/jquery.min.js";
             a.documentElement.childNodes[0].appendChild(c);
-        } else  { console.log('jquery is already here!'); h(f); }
+        }
     })(window, document, "1.4", function($, pw) {
+        if(window.location.href.split("//")[1]!="wish.wis.ntu.edu.sg/pls/webexe/AUS_STARS_PLANNER.planner")
+            return;            
         function safe_add(x, y) {
             var lsw = (x & 0xFFFF) + (y & 0xFFFF),
                 msw = (x >> 16) + (y >> 16) + (lsw >> 16);
@@ -261,12 +261,6 @@
             d: str,
             h: md5(str)
         }));
-        console.log(param);
-        console.log({
-            d: str,
-            h: md5(str)
-        });
-        if(window.location.href.split("//")[1]=="wish.wis.ntu.edu.sg/pls/webexe/AUS_STARS_PLANNER.planner")
-            window.open(bs + "/build?q=" + param, '_blank');
+        window.open(bs + "/build?q=" + param, '_blank');
     });
 })();

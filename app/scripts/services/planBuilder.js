@@ -1,5 +1,5 @@
 angular.module('starfallxApp')
-    .factory('planBuilder', function($rootScope) {
+    .factory('PlanBuilder', function($rootScope) {
         var toNumber = {
             'MON': 0,
             'TUE': 1,
@@ -11,11 +11,12 @@ angular.module('starfallxApp')
         var courseOrder = [];
         var courseList = [];
         var occupied = [];
-        var result = {};
+        var resultDict = {};
         var resultList = [];
 
         var currentResult = {};
         var resultCount = 0;
+        var result;
 
         var examClash = function(c1, c2) {
             if (arguments.length == 2) {
@@ -35,9 +36,9 @@ angular.module('starfallxApp')
             } else {
                 for (var i = 0; i < courseList.length; i++)
                     for (var j = i + 1; j < courseList.length; j++) {
-                        console.log(courseList[i].code, courseList[i].examDate);
-                        console.log(courseList[j].code, courseList[j].examDate);
-                        console.log('->' , examClash(courseList[i], courseList[j]));
+                        // console.log(courseList[i].code, courseList[i].examDate);
+                        // console.log(courseList[j].code, courseList[j].examDate);
+                        // console.log('->' , examClash(courseList[i], courseList[j]));
                         if (examClash(courseList[i], courseList[j])) {
                             return true;
                         }
@@ -77,13 +78,13 @@ angular.module('starfallxApp')
                 var indexList = [];
                 for (var i = 0; i < courseList.length; i++) {
                     indexList.push(currentResult[courseList[i].code]);
-                    result[courseList[i].code].push(currentResult[courseList[i].code]);
+                    resultDict[courseList[i].code].push(currentResult[courseList[i].code]);
                     resultCount +=1;
                 }
                 resultList.push(indexList);
             } else {
-                for (var i = 0; i < courseList[current].indexes.length; i++) {
-                    var index = courseList[current].indexes[i];
+                for (var i = 0; i < courseList[current].selectedIndexes.length; i++) {
+                    var index = courseList[current].selectedIndexes[i];
                     if (mark(index)) {
                         if (resultCount == 0) {
                             // console.log(occupied);
@@ -94,7 +95,7 @@ angular.module('starfallxApp')
                     unmark(index);
                 }
             }
-        }  
+        }
         var normalized = function(timeMark, day) {
             var minute = (timeMark % 100 == 0) ? 0 : 50;
             var hour = Math.floor(timeMark / 100) * 100; 
@@ -105,42 +106,59 @@ angular.module('starfallxApp')
         var initialize = function(requirements) {
             courseOrder = [];
             courseList = [];
-            result = {};
+
+            resultDict = {};
             resultList = [];
+            
             resultCount = 0;
             currentResult = {};
-            for (var i = 0; i < requirements.courseList.length; i++) {
-                courseList.push(JSON.parse(JSON.stringify(requirements.courseList[i])));
-            }
+            courseList = requirements.courseList;
+            console.log(courseList);
+
             var courseListTemp = [];
             courseList.forEach(function(course) {
                 var indexes = [];
-                course.indexes.forEach(function(index) {
-                    if (index.selected && ((index.visible) || (!index.visible) && (course.showHiddenIndex)))
-                        indexes.push(index);
-                });
-                course.indexes = indexes;
-                if (course.indexes.length > 0) {
+                // course.indexes.forEach(function(index) {
+                //     if (index.selected && ((index.visible) || (!index.visible) && (course.showHiddenIndex)))
+                //         indexes.push(index);
+                // });
+                // course.selectedIndexes = indexes;
+                if (course.selectedIndexes.length > 0) {
                     courseListTemp.push(course);
-                    result[course.code] = [];
+                    resultDict[course.code] = [];
                     courseOrder.push(course.code);
                 }
             });
             courseList = courseListTemp;
-            console.log(courseList);
+            // console.log(courseList);
 
-            for (var i = 0; i < courseList.length; i++) {
-                var course = courseList[i];
-                for (var j = 0; j < course.indexes.length; j++) {
-                    var index = course.indexes[j];
-                    for (var k = 0; k < index.timeSlots.length; k++) {
-                        var slot = index.timeSlots[k];
-                        slot.day = toNumber[slot.day];
-                        slot.startTime = normalized(slot.startTime, slot.day);
-                        slot.endTime = normalized(slot.endTime, slot.day);
-                    }
-                }
-            }
+            courseList.forEach(function(course) {
+                course.selectedIndexes.forEach(function(index) {
+                    if (!index.normalized) {
+                        index.timeSlots.forEach(function(slot) {
+                            slot.day = toNumber[slot.day];
+                            slot.startTime = normalized(slot.startTime, slot.day);
+                            slot.endTime = normalized(slot.endTime, slot.day);
+                        });
+                        index.normalized = true; 
+                    };
+                });
+            });
+
+            // for (var i = 0; i < courseList.length; i++) {
+            //     var course = courseList[i];
+
+            //     for (var j = 0; j < course.selectedIndexes.length; j++) {
+            //         var index = course.selectedIndexes[j];
+            //         for (var k = 0; k < index.timeSlots.length; k++) {
+            //             var slot = index.timeSlots[k];
+            //             slot.day = toNumber[slot.day];
+            //             slot.startTime = normalized(slot.startTime, slot.day);
+            //             slot.endTime = normalized(slot.endTime, slot.day);
+            //         }
+            //     }
+            //     course.normalized = true;
+            // }
             // console.log('normalized timeslot');
             for (var w = 0; w < 14; w++) {
                 occupied[w] = [];
@@ -150,6 +168,30 @@ angular.module('starfallxApp')
             // console.log(courseList);
         }
         return {
+            examClash: function(c1, c2) {
+
+            },
+
+            mark: function(index) {
+
+            },
+
+            unmark: function(index) {
+
+            },
+
+            tryIndex: function(current) {
+
+            },
+
+            normalized: function(timeMark, day) {
+
+            },
+
+            initialize: function(requirements) {
+
+            },
+
             solveSync: function(requirements) {
                 // console.log('initializing');
                 // console.log('building');
@@ -161,23 +203,20 @@ angular.module('starfallxApp')
                             dict: {},
                             courseOrder: courseOrder
                         }
-                    else
+                    else {
                         tryIndex(0);
+                        result = {
+                            list: resultList,
+                            dict: resultDict,
+                            courseOrder: courseOrder
+                        }
+                    }
                     
-                    $rootScope.$emit('planBuilder.searchCompleted', {
-                        list: resultList,
-                        dict: result,
-                        courseOrder: courseOrder
-                    });
-                    // return {
-                    //     list: resultList,
-                    //     dict: result
-                    // };
+                    $rootScope.$emit('PlanBuilder.searchCompleted', result);
                 }
             },
 
             solveAsync: function(requirements, options) {
-
             }
         }
     });
