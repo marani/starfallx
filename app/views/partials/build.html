@@ -12,7 +12,7 @@
                 <h4>Plan Detail</h4>
             </div>
             
-            <div class="hidden-xs ctn-plan-table-head">
+            <div class="ctn-plan-table-head">
                 <table class="plan-table-head table table-striped table-condensed table-bordered table-hover">
                     <tbody>
                         <tr>
@@ -23,10 +23,10 @@
                 </table>
             </div>
 
-            <div class="hidden-xs border-grad border-grad-top"><div></div></div>
-            <div class="hidden-xs border-grad border-grad-btm"><div></div></div>
+            <div class="border-grad border-grad-top"><div></div></div>
+            <div class="border-grad border-grad-btm"><div></div></div>
             
-            <sf-perfect-scrollbar class="ctn-plan-table-main hidden-xs scroll-panel" 
+            <sf-perfect-scrollbar class="ctn-plan-table-main scroll-panel" 
                 wheel-propagation="true" 
                 wheel-speed="7" 
                 ng-mousewheel="handleMouseWheel"
@@ -58,11 +58,9 @@
                         <strong>Back to Filter</strong>
                     </button>
                 </div>
-
             </sf-perfect-scrollbar>
             
-
-            <div class="ctn-btn ctn-btn-fixed hidden-xs">
+            <div class="ctn-btn ctn-btn-fixed">
                 <button 
                     class="btn btn-danger btn-block"
                         ng-click="close()">
@@ -78,7 +76,8 @@
 
             <div class="col-head row text-center row"><h4>Filter</h4></div>
 
-            <div class="hidden-xs ctn-course-table-head">
+
+            <div class="ctn-course-table-head">
                 <table class="course-table-head table table-striped table-condensed table-bordered">
                     <tbody>
                         <tr>
@@ -86,11 +85,6 @@
                             <td><strong>Courses</strong></td>
                             <td></td>
                             <td><strong>Indexes</strong></td>
-                            <!-- <td tooltip="Indexes that you are not allowed to take, you can not see in STARS but you might be able to appeal for"
-                                tooltip-trigger="mouseenter" 
-                                tooltip-placement="bottom">
-                                <strong>N/A</strong>
-                            </td> -->
                             <td popover="
                                 Idexes that are not available in STARS Planner 
                                 but you might be able to appeal for.
@@ -104,13 +98,13 @@
                 </table>
             </div>
 
-            <sf-perfect-scrollbar class="hidden-xs ctn-course-list scroll-panel" 
+            <sf-perfect-scrollbar class="ctn-course-list scroll-panel" 
                 wheel-propagation="true" 
                 wheel-speed="7" 
                 ng-mousewheel="handleMouseWheel"
                 update="updateScroll" >
                 <table class="course-table table table-striped table-condensed table-bordered" ng-show="(courseList.length > 0)">
-                    <tbody ui-sortable ng-model="courseList"> <!---->
+                    <tbody ui-sortable ng-model="courseList"> 
                         <tr 
                             ng-repeat="course in courseList track by course.code"  
                             ng-class="{'course-filter-disabled': course.selected.none}"
@@ -150,7 +144,6 @@
                                     ng-class="{'btn-success': course.showHiddenIndex}"
                                     class="btn btn-xs btn-hi">
                                     <span ng-show="course.showHiddenIndex" class="btn-hi-show">
-                                        <!-- <strong>{{course.hiddenIndexCount}} </strong> -->
                                         <strong>{{course.hiddenIndexCount}}</strong>
                                     </span>
                                     <span ng-show="!course.showHiddenIndex" ng-class="{'btn-hi-hide-hl': course.hiddenIndexCount > 0}" class="btn-hi-hide">
@@ -171,95 +164,16 @@
                 </div>
             </sf-perfect-scrollbar>
 
-            <div class="hidden-xs border-grad border-grad-top"><div></div></div>
-            <div class="hidden-xs border-grad border-grad-btm"><div></div></div>
+            <div class="border-grad border-grad-top"><div></div></div>
+            <div class="border-grad border-grad-btm"><div></div></div>
 
-            <div class="ctn-btn ctn-btn-fixed hidden-xs">
+            <div class="ctn-btn ctn-btn-fixed">
                 <button 
                     class="btn btn-success btn-block find-btn find-btn-fixed"
                     ng-disabled="buildingStarted || courseList.length == 0"
                     ng-click="search()">
                     <strong>Find Possible Plans</strong>
                 </button>
-            </div>
-
-            <div class="visible-xs ctn-course-list">
-                <table 
-                    ng-show="(courseList.length > 0)" 
-                    class="course-table table table-striped table-condensed table-bordered">
-                    <tbody>
-                        <tr>
-                            <td></td>
-                            <td><strong>Courses</strong></td>
-                            <td></td>
-                            <td><strong>Indexes</strong></td>
-                            <td popover="
-                                Idexes that are not available in STARS Planner 
-                                but you might be able to appeal for. 
-                                Click on the numbers to use these indexes." 
-                                popover-trigger="mouseenter"
-                                popover-placement="left">
-                                <strong>N/A</strong>
-                            </td>
-                        </tr>
-                    </tbody>
-                    <tbody> <!--ui-sortable  ng-model="courseList"-->
-                        <tr 
-                            ng-repeat="course in courseList track by course.code"  
-                            ng-class="{'course-filter-disabled': course.selected.none}"
-                            title="{{course.code + ' - ' + course.title + ' (' + course.aus +' AU)'}}">
-                            <td><strong>{{$index + 1}}</strong></td>
-                            <td><strong>{{course.code}}</strong></td>
-                            <td>
-                                <button
-                                    class="index-btn btn btn-xs"
-                                    ng-class="{'btn-success': course.selected.all}"
-                                    ng-click="toggleAll(course)">
-                                    <i class="fa fa-fw fa-check"></i>
-                                </button>
-                            </td>
-                            <td> 
-                                <button 
-                                    ng-repeat="index in course.indexes"
-                                    class="index-btn btn btn-xs"
-                                    ng-class="{
-                                        'btn-success': index.selected, 
-                                        'select-preview-positive': course == groupSelect.course && groupSelect.preview[$index] && groupSelect.selectType,
-                                        'select-preview-negative': course == groupSelect.course && groupSelect.preview[$index] && !groupSelect.selectType
-                                        }"
-                                    ng-mousedown="handleMouseDownIndex(course, $index)"
-                                    ng-mouseup="handleMouseUpIndex(course, $index)"
-                                    ng-mouseenter="handleMouseEnterIndex(course, $index)"
-
-                                    ng-show="index.visible || course.showHiddenIndex">
-                                    {{index.code}}
-                                </button>
-                            </td>
-                            <td title="Click to toggle">
-                                <button 
-                                    ng-click="toggleHiddenIndex(course)" 
-                                    ng-disabled="course.hiddenIndexCount == 0" 
-                                    ng-class="{'btn-success': course.showHiddenIndex}"
-                                    class="btn btn-xs btn-hi">
-                                    <span ng-show="course.showHiddenIndex" class="btn-hi-show">
-                                        <strong>{{course.hiddenIndexCount}}</strong>
-                                    </span>
-                                    <span ng-show="!course.showHiddenIndex" ng-class="{'btn-hi-hide-hl': course.hiddenIndexCount > 0}" class="btn-hi-hide">
-                                        <strong>{{course.hiddenIndexCount}}</strong>
-                                    </span>
-                                </button>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="ctn-btn ctn-btn-float">
-                    <button 
-                        class="btn btn-success btn-block find-btn find-btn-float"
-                        ng-disabled="buildingStarted || courseList.length == 0"
-                        ng-click="search()">
-                        <strong>Find Possible Plans</strong>
-                    </button>
-                </div>
             </div>
         </div>
 
@@ -273,7 +187,7 @@
                 </h4>
             </div>
 
-            <div class="hidden-xs ctn-result-table-head"
+            <div class="ctn-result-table-head"
                 ng-show="result.list.length > 0">
                 <table class="result-table-head table table-striped table-condensed table-bordered">
                     <tbody>
@@ -292,14 +206,13 @@
                     Adding more Indexes or removing some Course might help.</strong>
             </div>
 
-            <div ng-show="result.list.length > 0" class="hidden-xs border-grad border-grad-top"><div></div></div>
-            <div ng-show="result.list.length > 0" class="hidden-xs border-grad border-grad-btm"><div></div></div>
+            <div ng-show="result.list.length > 0" class="border-grad border-grad-top"><div></div></div>
+            <div ng-show="result.list.length > 0" class="border-grad border-grad-btm"><div></div></div>
 
-            <sf-perfect-scrollbar class="hidden-xs ctn-result-list scroll-panel" 
+            <sf-perfect-scrollbar class="ctn-result-list scroll-panel" 
                 wheel-propagation="true" 
                 wheel-speed="7" 
                 ng-mousewheel="handleMouseWheel"
-
                 update="updateScroll" >
                 <table class="result-table table table-striped table-condensed table-bordered table-hover"
                     ng-class="{ 'table-plotting': rowActive != null }"
@@ -316,24 +229,6 @@
                     </tbody>
                 </table>
             </sf-perfect-scrollbar>
-            
-            
-            <div class="visible-xs ctn-result-list">
-                <table ng-show="(result.list.length > 0)" class="result-table table table-striped table-condensed table-bordered table-hover">
-                    <tbody>
-                        <tr>
-                            <td></td>
-                            <td ng-repeat="code in result.courseOrder"><strong>{{code}}</strong></td>
-                        </tr>
-                    </tbody>
-                    <tbody>
-                        <tr ng-repeat="indexArr in result.list">
-                            <td><strong>{{$index + 1}}</strong></td>
-                            <td ng-repeat="index in indexArr">{{index}}</td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
         </div>
     </div>
 </div>
