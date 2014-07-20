@@ -207,8 +207,7 @@
                         <tr 
                             ng-repeat="course in courseList track by course.code"  
                             ng-class="{'course-filter-disabled': course.selected.none}"
-                            title="{{course.code + ' - ' + course.title + ' (' + course.aus +' AU)'}}"
-                            >
+                            title="{{course.code + ' - ' + course.title + ' (' + course.aus +' AU)'}}">
                             <td><strong>{{$index + 1}}</strong></td>
                             <td><strong>{{course.code}}</strong></td>
                             <td>
@@ -216,7 +215,7 @@
                                     class="index-btn btn btn-xs"
                                     ng-class="{'btn-success': course.selected.all}"
                                     ng-click="toggleAll(course)">
-                                    <i class="fa fa-fw fa-check">
+                                    <i class="fa fa-fw fa-check"></i>
                                 </button>
                             </td>
                             <td> 
