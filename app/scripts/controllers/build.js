@@ -35,19 +35,19 @@ angular.module('starfallxApp')
 angular.module('starfallxApp')
     .controller('BuildCtrl', function($scope, $rootScope, $http, $document) {
         // $scope.leftPanel = 'ResultPlot';
-        $scope.leftPanel = 'Filter';
-        $scope.$onRootScope('ResultCtrl.showPlot', function() {
-            $scope.leftPanel = 'ResultPlot';
-            $scope.$broadcast('layoutChange');
-        });
-        $scope.$onRootScope('ResultCtrl.hidePlot', function() {
-            $scope.leftPanel = 'Filter';
-            $scope.$broadcast('layoutChange');
-        });
-        $scope.$onRootScope('ResultPlotCtrl.hidePlot', function() {
-            $scope.leftPanel = 'Filter';
-            $scope.$broadcast('layoutChange');
-        });
+        // $scope.leftPanel = 'Filter';
+        // $scope.$onRootScope('ResultCtrl.showPlot', function() {
+        //     $scope.leftPanel = 'ResultPlot';
+        //     $scope.$broadcast('layoutChange');
+        // });
+        // $scope.$onRootScope('ResultCtrl.hidePlot', function() {
+        //     $scope.leftPanel = 'Filter';
+        //     $scope.$broadcast('layoutChange');
+        // });
+        // $scope.$onRootScope('ResultPlotCtrl.hidePlot', function() {
+        //     $scope.leftPanel = 'Filter';
+        //     $scope.$broadcast('layoutChange');
+        // });
     })
     .controller('ResultPlotCtrl', function($scope, $rootScope, CourseStore, WL) {
         // CONSTANTS
@@ -158,21 +158,25 @@ angular.module('starfallxApp')
             return t;
         }
 
-        $scope.$onRootScope('ResultCtrl.showPlot', function(event, eventData) {
+        // $scope.$onRootScope('ResultCtrl.showPlot', function(event, eventData) {
+        //     for (var i = 0; i < eventData.courseOrder.length; i++)
+        //         courseList[i] = CourseStore.getByCodeSync(eventData.courseOrder[i]);
+        // });
+        $scope.$on('ResultCtrl.resSetChange', function(event, eventData) {
+            // console.log(eventData);
             for (var i = 0; i < eventData.courseOrder.length; i++)
                 courseList[i] = CourseStore.getByCodeSync(eventData.courseOrder[i]);
         });
-        $scope.$onRootScope('ResultCtrl.resRowChange', function(event, eventData) {
+        $scope.$on('ResultCtrl.resRowChange', function(event, eventData) {
             plan = eventData.plan;
             updateTimeTable();
         });
-        $scope.$onRootScope('ResultCtrl.resColChange', function(event, eventData) {
+        $scope.$on('ResultCtrl.resColChange', function(event, eventData) {
             $scope.course = eventData.courseIndex;
         });
-
-        $scope.close = function() {
-            $rootScope.$emit('ResultPlotCtrl.hidePlot', {});
-        }
+        // $scope.close = function() {
+        //     $rootScope.$emit('ResultPlotCtrl.hidePlot', {});
+        // }
     })
     .controller('FilterCtrl', function($scope, $timeout, $routeParams, CourseStore, PlanBuilder, $rootScope, $document, WL) {
         var acadTime = CourseStore.getAcadTime();
@@ -336,36 +340,27 @@ angular.module('starfallxApp')
         $scope.colActive = null;
         $scope.courseList = [];
 
-        $scope.toggleResultPlot = function($index) {
-            if ($scope.rowActive == null) {
-                $scope.rowActive = $index;
-
-                $rootScope.$emit('ResultCtrl.showPlot', {
-                    courseOrder: $scope.result.courseOrder
-                });
-
-                $rootScope.$emit('ResultCtrl.resRowChange', {
-                    plan: $scope.result.list[$scope.rowActive]
-                });
-
-                // console.log('show plot', $index);
-            } else if ($scope.rowActive == $index) {
-                $rootScope.$emit('ResultCtrl.hidePlot');
-                $scope.rowActive = null;
-                // console.log('hide plot', $index);
-            }
+        $scope.newResultSet = function($index) {
+            $scope.rowActive = $index;
+            $scope.$broadcast('ResultCtrl.resSetChange', {
+                courseOrder: $scope.result.courseOrder
+            });
+            $scope.$broadcast('ResultCtrl.resRowChange', {
+                plan: $scope.result.list[$scope.rowActive]
+            });
+            // console.log('show plot', $index);
         }
 
-        $scope.highlightResult = function($index) {
-            // console.log('Result list watcher count:', WL.log($scope));
-            if ($scope.rowActive != null) {
-                // console.log('highlight result', $index);
-                $scope.rowActive = $index;
-                $rootScope.$emit('ResultCtrl.resRowChange', {
-                    plan: $scope.result.list[$scope.rowActive]
-                });
-            }
-        }
+        // $scope.highlightResult = function($index) {
+        //     // console.log('Result list watcher count:', WL.log($scope));
+        //     if ($scope.rowActive != null) {
+        //         // console.log('highlight result', $index);
+        //         $scope.rowActive = $index;
+        //         $scope.$broadcast('ResultCtrl.resRowChange', {
+        //             plan: $scope.result.list[$scope.rowActive]
+        //         });
+        //     }
+        // }
 
         $scope.highlightCourse = function($index) {
             if ($scope.rowActive != null) {
@@ -377,23 +372,11 @@ angular.module('starfallxApp')
             }
         }
 
-        $scope.nav = {
-            pageLen: 15,
-            currentPage: 1,
-            maxNavLen: 5
-        }
-
-        $scope.changePage = function() {
-            $scope.visibleResult = [];
-            var start = ($scope.nav.currentPage - 1) * $scope.nav.pageLen;
-            var end = Math.min(start + $scope.nav.pageLen, $scope.result.list.length);
-            for (var i = start; i < end; i++)
-                $scope.visibleResult.push({
-                    index: i,
-                    indexArr: $scope.result.list[i]
-                });
-            $scope.$emit('layoutChange');
-            // console.log($scope.visibleResult);
+        $scope.changeCurrentResult = function(delta) {
+            $scope.rowActive = Math.min(Math.max(0, $scope.rowActive + delta), $scope.result.list.length - 1);
+            $scope.$broadcast('ResultCtrl.resRowChange', {
+                plan: $scope.result.list[$scope.rowActive]
+            });
         }
 
         $scope.$onRootScope('ResultPlotCtrl.hidePlot', function() {
@@ -414,12 +397,7 @@ angular.module('starfallxApp')
             }
 
             //init nav
-            $scope.visibleResult = [];
-            for (var i = 0; i < Math.min($scope.nav.pageLen, result.list.length); i++)
-                $scope.visibleResult.push({
-                    index: i,
-                    indexArr: $scope.result.list[i]
-                });
-            $scope.nav.currentPage = 1;
+            // $scope.rowActive = 0;
+            $scope.newResultSet(0);
         });
     });
