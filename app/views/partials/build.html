@@ -4,70 +4,6 @@
     <div class="main-container-tr" 
         ng-controller="BuildCtrl">
 
-        <div class="col-lg-5 col-md-5 col-sm-5 container-col panel-left-col result-plot-col"
-            ng-show="leftPanel == 'ResultPlot'"
-            ng-controller="ResultPlotCtrl"
-            left-panel>
-            <div class="col-head row text-center row">
-                <h4>Plan Detail</h4>
-            </div>
-            
-            <div class="ctn-plan-table-head">
-                <table class="plan-table-head table table-striped table-condensed table-bordered table-hover">
-                    <tbody>
-                        <tr>
-                            <td></td>
-                            <td ng-repeat="day in days"><strong>{{day}}</strong></td>
-                        </tr>
-                    </tbody>
-                </table>
-            </div>
-
-            <div class="border-grad border-grad-top"><div></div></div>
-            <div class="border-grad border-grad-btm"><div></div></div>
-            
-            <sf-perfect-scrollbar class="ctn-plan-table-main scroll-panel" 
-                wheel-propagation="true" 
-                wheel-speed="7" 
-                ng-mousewheel="handleMouseWheel"
-                update="updateScroll">
-                <table class="plan-table-main table table-striped table-condensed table-bordered">
-                    <tbody>
-                        <tr ng-repeat="mark in timeMarks">
-                            <td><span>{{mark.readable}}</span></td>
-                            <td></td>
-                            <td ng-repeat="slot in timeRow[mark.normalized]" rowspan="{{slot.rowspan}}">
-                                <span>{{slot.courseCode}}</span>
-                            </td>
-                            <td ng-repeat="day in normalizedDays"
-                                rowspan="{{timeSlot[day * 48 + mark.normalized].rowspan}}"
-                                ng-show="timeSlot[day * 48 + mark.normalized].rowspan > 0"
-                                ng-class="{'starter-mark': timeSlot[day * 48 + mark.normalized].rowspan > 1}">
-                                <span>
-                                    <strong>{{timeSlot[day * 48 + mark.normalized].courseCode}}</strong>
-                                    {{timeSlot[day * 48 + mark.normalized].slotType}}
-                                </span>
-                            </td>
-                        </tr>
-                    </tbody>
-                </table>
-                <div class="ctn-btn ctn-btn-float">
-                    <button 
-                        class="btn btn-danger btn-block"
-                        ng-click="close()">
-                        <strong>Back to Filter</strong>
-                    </button>
-                </div>
-            </sf-perfect-scrollbar>
-            
-            <div class="ctn-btn ctn-btn-fixed">
-                <button 
-                    class="btn btn-danger btn-block"
-                        ng-click="close()">
-                    <strong>Back to Filter</strong>
-                </button>
-            </div>
-        </div>
         
         <div class="col-lg-5 col-md-5 col-sm-5 container-col panel-left-col course-pref-col"
             ng-show="leftPanel == 'Filter'"
@@ -177,9 +113,77 @@
             </div>
         </div>
 
+        <div class="col-lg-5 col-md-5 col-sm-5 container-col panel-left-col result-plot-col"
+            ng-show="leftPanel == 'ResultPlot'"
+            ng-controller="ResultPlotCtrl"
+            left-panel>
+            <div class="col-head row text-center row">
+                <h4>Plan Detail</h4>
+            </div>
+            
+            <div class="ctn-plan-table-head">
+                <table class="plan-table-head table table-striped table-condensed table-bordered table-hover">
+                    <tbody>
+                        <tr>
+                            <td></td>
+                            <td ng-repeat="day in days"><strong>{{day}}</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+
+            <div class="border-grad border-grad-top"><div></div></div>
+            <div class="border-grad border-grad-btm"><div></div></div>
+            
+            <sf-perfect-scrollbar class="ctn-plan-table-main scroll-panel" 
+                wheel-propagation="true" 
+                wheel-speed="7" 
+                ng-mousewheel="handleMouseWheel"
+                update="updateScroll">
+                <table class="plan-table-main table table-striped table-condensed table-bordered">
+                    <tbody>
+                        <tr ng-repeat="mark in timeMarks">
+                            <td><span>{{mark.readable}}</span></td>
+                            <td></td>
+                            <td ng-repeat="t in timeRow[mark.normalized]"
+                                rowspan="{{timeSlot[t].rowspan}}"
+                                ng-show="timeSlot[t].rowspan > 0"
+                                ng-class="{'starter-mark': timeSlot[t].rowspan > 1}">
+                                <div ng-repeat="cls in timeSlot[t].classList"
+                                    ng-style="{
+                                        'top': ((cls.startTime - timeSlot[t].startTime) * 15 - 1) + 'px',
+                                        'height': (cls.endTime - cls.startTime) * 15 + 'px',
+                                        'left': (100 / cls.sharedWith) * cls.sharedSlotIndex + '%',
+                                        'border-left-width': ((cls.sharedSlotIndex > 0) + 0) + 'px',
+                                        'border-top-width': (($index > 0) + 0) + 'px'
+                                    }">
+                                    <strong>{{cls.courseCode}}</strong> {{cls.slotType}}<br>
+                                </div>
+                            </td>
+                        </tr>
+                    </tbody>
+                </table>
+                <div class="ctn-btn ctn-btn-float">
+                    <button 
+                        class="btn btn-danger btn-block"
+                        ng-click="close()">
+                        <strong>Back to Filter</strong>
+                    </button>
+                </div>
+            </sf-perfect-scrollbar>
+            
+            <div class="ctn-btn ctn-btn-fixed">
+                <button 
+                    class="btn btn-danger btn-block"
+                        ng-click="close()">
+                    <strong>Back to Filter</strong>
+                </button>
+            </div>
+        </div>
+
         <div class="col-lg-7 col-md-7 col-sm-7 container-col panel-right-col result-col" 
             ng-controller="ResultCtrl"
-            result-panel> 
+            left-panel> 
             <div class="row text-center col-head">
                 <h4>
                     Possible Plans 
@@ -218,17 +222,54 @@
                     ng-class="{ 'table-plotting': rowActive != null }"
                     ng-show="(result.list.length > 0)" >
                     <tbody>
-                        <tr ng-repeat="(k, indexArr) in result.list"
-                            ng-show="k <= 15"
-                            ng-mousedown="toggleResultPlot($index)"
-                            ng-mouseenter="highlightResult($index)">
-                            <td><strong>{{$index + 1}}</strong></td>
-                            <td ng-repeat="index in indexArr"
+                        <tr ng-repeat="res in visibleResult"
+                            ng-mousedown="toggleResultPlot(res.index)"
+                            ng-mouseenter="highlightResult(res.index)">
+                            <td><strong>{{res.index + 1}}</strong></td>
+                            <td ng-repeat="index in res.indexArr"
                                 ng-mouseenter="highlightCourse($index)">{{index}}</td>
                         </tr>
                     </tbody>
                 </table>
+                <div class="ctn-btn ctn-btn-float"
+                    ng-show="result.list.length > 0">
+                    <pagination class="pagination-sm"
+                        total-items="result.list.length"
+                        items-per-page="nav.pageLen"
+                        ng-model="nav.currentPage"
+                        max-size="nav.maxNavLen"
+
+                        boundary-links="true"
+                        rotate="true"
+
+                        previous-text=" "
+                        first-text=" "
+                        next-text=" "
+                        last-text=" "
+
+                        ng-change="changePage()">
+                    </pagination>
+                </div>
             </sf-perfect-scrollbar>
+            <div class="ctn-btn ctn-btn-fixed"
+                ng-show="result.list.length > 0">
+                <pagination class="pagination-sm" 
+                    total-items="result.list.length"
+                    items-per-page="nav.pageLen"
+                    ng-model="nav.currentPage" 
+                    max-size="nav.maxNavLen"
+
+                    boundary-links="true"
+                    rotate="true"
+
+                    previous-text=" "
+                    first-text=" "
+                    next-text=" "
+                    last-text=" "
+
+                    ng-change="changePage()">
+                </pagination>
+            </div>
         </div>
     </div>
 </div>

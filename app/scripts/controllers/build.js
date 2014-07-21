@@ -50,6 +50,7 @@ angular.module('starfallxApp')
         });
     })
     .controller('ResultPlotCtrl', function($scope, $rootScope, CourseStore, WL) {
+        // CONSTANTS
         $scope.days = [
             'MON',
             'TUE',
@@ -58,100 +59,112 @@ angular.module('starfallxApp')
             'FRI',
             'SAT'
         ];
-        $scope.timeMarks = {};
-        $scope.timeSlot = [];
+
         $scope.normalizedDays = [0, 1, 2, 3, 4, 5];
+        $scope.timeRow = [];
 
-        var firstMark = 16, lastMark = 47, weekLen = 6;
+        var firstMark = 16, 
+            lastMark = 47, 
+            weekLen = 6,
+            plan, courseList;
 
+        function initPlot() {
+            $scope.timeMarks = {};
+            $scope.timeSlot = [];
+            plan = null;
+            courseList = []; 
+            for (var t = firstMark; t <= lastMark; t++) {
+                $scope.timeMarks[t] = { normalized: t };
+                if (t % 2 == 1)
+                    $scope.timeMarks[t].readable = (Math.floor(t / 2) * 100 + (t % 2) * 30);
+                else
+                    $scope.timeMarks[t].readable = '';
 
-        var plan = null;
-        var courseList = []; 
-        for (var i = firstMark; i <= lastMark; i++) {
-            $scope.timeMarks[i] = { normalized: i };
-            if (i % 2 == 1)
-                $scope.timeMarks[i].readable = (Math.floor(i / 2) * 100 + (i % 2) * 30);
-            else
-                $scope.timeMarks[i].readable = '';
+                $scope.timeRow[t] = [];
+                for (var day = 0; day < weekLen; day++) 
+                    $scope.timeRow[t][day] = day * 48 + t;
+            }
         }
-        
-        var updateTimeTable = function() {
-            console.log('Plotter watcher count:', WL.log($scope));
-            // console.log('update time table', + new Date());
-            // normalize courseList data
-            // go to each timeSlot, mark the first
-            // span unit with rowspan=(length of time slot)
-            for (var i = 0; i < 7 * 48; i++)
-                $scope.timeSlot[i] = { rowspan: 1 };
+        initPlot();
 
+        var updateTimeTable = function() {
+            // console.log('Plotter watcher count:', WL.log($scope));
+            var start = + new Date();
+            for (var i = 0; i < 7 * 48; i++)
+                $scope.timeSlot[i] = { 
+                    rowspan: 1, 
+                    startTime: null,
+                    endTime: null,
+                    classList: null
+                };
+
+            var starterSlots = [];
             for (var i = 0; i < courseList.length; i++)
                 courseList[i].indexes.forEach(function(index) {
                     if (index.code == plan[i]) {
                         index.timeSlots.forEach(function(timeSlot) {
-                            $scope.timeSlot[timeSlot.startTime] = {
-                                rowspan: timeSlot.endTime - timeSlot.startTime,
-                                courseCode: courseList[i].code,
-                                slotType: timeSlot.slotType
+                            var tableSlot = $scope.timeSlot[timeSlot.startTime];
+                            if (!tableSlot.classList) {
+                                starterSlots.push(tableSlot);
+                                tableSlot.startTime = timeSlot.startTime;
+                                tableSlot.endTime = timeSlot.endTime;
+                                tableSlot.classList = [{
+                                        courseCode: courseList[i].code,
+                                        slotType: timeSlot.slotType,
+                                        startTime: timeSlot.startTime,
+                                        endTime: timeSlot.endTime,
+                                        sharedSlotIndex: 0
+                                    }];
+                            } else {
+                                tableSlot.classList.push({
+                                    courseCode: courseList[i].code,
+                                    slotType: timeSlot.slotType,
+                                    startTime: timeSlot.startTime,
+                                    endTime: timeSlot.endTime,
+                                    sharedSlotIndex: tableSlot.classList.length
+                                });
+                                tableSlot.endTime = Math.max(tableSlot.endTime, timeSlot.endTime);
                             }
-                            for (var t = timeSlot.startTime + 1; t < timeSlot.endTime; t++) 
-                                $scope.timeSlot[t].rowspan = 0;
                         });
                     }
                 });
+            //
+            starterSlots.forEach(function(slot) {
+                slot.classList.forEach(function(cls) {
+                    cls.sharedWith = slot.classList.length;
+                })
+            });
+            //must work for 3 cases: nested slot, overlap slot, equal slot
+            //merge rowspan
+            $scope.timeSlot.forEach(function(slot) {
+                if (slot.classList) spanFrom(slot);
+            });
         }
 
-        // $scope.timeRow = [];
-        
-        // for (var i = firstMark; i <= lastMark; i++) {
-            // $scope.timeRow[i] = [];
-        // }
-        // var updateTimeTable = function() {
-        //     normalize courseList data
-        //     go to each timeSlot, mark the first span unit with row-span=length of time slot
-        //     for (var i = firstMark; i <= lastMark; i++) {
-        //         // $scope.timeRow[i] = [];
-        //         for (var j = 0; j < weekLen; j++)
-        //             $scope.timeRow[i][j] = { rowspan: 1 };
-        //     }
-        //     console.log($scope.timeRow);
-
-        //     for (var i = 0; i < courseList.length; i++)
-        //         courseList[i].indexes.forEach(function(index) {
-        //             if (index.code == plan[i]) {
-        //                 index.timeSlots.forEach(function(timeSlot) {
-        //                     if (courseList[i].code == 'CSC423')
-        //                         console.log(timeSlot.startTime, timeSlot.endTime);
-        //                     $scope.timeRow[timeSlot.startTime % 48][timeSlot.day] = {
-        //                         rowspan: timeSlot.endTime % 48 - timeSlot.startTime % 48,
-        //                         courseCode: courseList[i].code
-        //                     };
-        //                     for (var t = timeSlot.startTime % 48 + 1; t < timeSlot.endTime % 48; t++)
-        //                         $scope.timeRow[t][timeSlot.day].rowspan = 0;
-        //                 });
-        //             }
-        //         });
-
-        //     for (var i = firstMark; i <= lastMark; i++) {
-        //         var temp = [];
-        //         for (var j = 0; j < weekLen; j++)
-        //             if ($scope.timeRow[i][j].rowspan > 0) 
-        //                 temp.push($scope.timeRow[i][j]);
-        //         $scope.timeRow[i] = temp;
-        //     }
-        // }
+        function spanFrom(slot) {
+            var t = slot.startTime + 1, next;
+            // console.log(slot.startTime);
+            while (t < slot.endTime) {
+                if ($scope.timeSlot[t].classList) {
+                    next = spanFrom($scope.timeSlot[t]);
+                    slot.classList = slot.classList.concat($scope.timeSlot[t].classList);
+                    $scope.timeSlot[t].classList = null;
+                } else
+                    next = t + 1;
+                $scope.timeSlot[t].rowspan = 0;
+                t = next;
+            }
+            slot.rowspan = t - slot.startTime;
+            return t;
+        }
 
         $scope.$onRootScope('ResultCtrl.showPlot', function(event, eventData) {
-            // console.log(eventData.courseOrder);
             for (var i = 0; i < eventData.courseOrder.length; i++)
                 courseList[i] = CourseStore.getByCodeSync(eventData.courseOrder[i]);
-            // console.log(courseList);
         });
         $scope.$onRootScope('ResultCtrl.resRowChange', function(event, eventData) {
             plan = eventData.plan;
             updateTimeTable();
-            // for (var i = 0; i < courseList.length; i++) {
-            //     updateTimeTable();
-            // }
         });
         $scope.$onRootScope('ResultCtrl.resColChange', function(event, eventData) {
             $scope.course = eventData.courseIndex;
@@ -160,7 +173,6 @@ angular.module('starfallxApp')
         $scope.close = function() {
             $rootScope.$emit('ResultPlotCtrl.hidePlot', {});
         }
-
     })
     .controller('FilterCtrl', function($scope, $timeout, $routeParams, CourseStore, PlanBuilder, $rootScope, $document, WL) {
         var acadTime = CourseStore.getAcadTime();
@@ -171,7 +183,7 @@ angular.module('starfallxApp')
         $scope.loadingFinished = false;
 
         var updateSelectionStatus = function(course) {
-            console.log('Filter watcher count:', WL.log($scope));
+            // console.log('Filter watcher count:', WL.log($scope));
             var selectedCount = 0;
             course.selectedIndexes = [];
             var all = course.showHiddenIndex ? course.indexes.length : course.visibleIndexCount;
@@ -248,20 +260,20 @@ angular.module('starfallxApp')
 
         $scope.search = function() {
             $scope.buildingStarted = true;
-            var startTime = +new Date();
-            console.log('start building...');
+            // var startTime = +new Date();
+            // console.log('start building...');
             PlanBuilder.solveSync({
                 courseList: $scope.courseList,
                 type: "default"
             });
-            console.log('finished in', +new Date() - startTime, 'ms');
+            // console.log('finished in', +new Date() - startTime, 'ms');
             $scope.buildingStarted = false;
         }
 
         $scope.$watch(CourseStore.initDone, function(value) {
             if (value == true) {
                 var courseFilter = CourseStore.getFilter();
-                console.log(courseFilter);
+                // console.log(courseFilter);
                 $scope.courseList = [];
                 // console.log('filter: ');
                 for (var courseCode in courseFilter) {
@@ -336,16 +348,16 @@ angular.module('starfallxApp')
                     plan: $scope.result.list[$scope.rowActive]
                 });
 
-                console.log('show plot', $index);
+                // console.log('show plot', $index);
             } else if ($scope.rowActive == $index) {
                 $rootScope.$emit('ResultCtrl.hidePlot');
                 $scope.rowActive = null;
-                console.log('hide plot', $index);
+                // console.log('hide plot', $index);
             }
         }
 
         $scope.highlightResult = function($index) {
-            console.log('Result list watcher count:', WL.log($scope));
+            // console.log('Result list watcher count:', WL.log($scope));
             if ($scope.rowActive != null) {
                 // console.log('highlight result', $index);
                 $scope.rowActive = $index;
@@ -357,13 +369,33 @@ angular.module('starfallxApp')
 
         $scope.highlightCourse = function($index) {
             if ($scope.rowActive != null) {
-                console.log('highlight course', $scope.result.courseOrder[$index]);
+                // console.log('highlight course', $scope.result.courseOrder[$index]);
                 $scope.colActive = $index;
                 $rootScope.$emit('ResultCtrl.resColChange', {
                     courseIndex: $scope.colActive
                 });
             }
         }
+
+        $scope.nav = {
+            pageLen: 15,
+            currentPage: 1,
+            maxNavLen: 5
+        }
+
+        $scope.changePage = function() {
+            $scope.visibleResult = [];
+            var start = ($scope.nav.currentPage - 1) * $scope.nav.pageLen;
+            var end = Math.min(start + $scope.nav.pageLen, $scope.result.list.length);
+            for (var i = start; i < end; i++)
+                $scope.visibleResult.push({
+                    index: i,
+                    indexArr: $scope.result.list[i]
+                });
+            $scope.$emit('layoutChange');
+            // console.log($scope.visibleResult);
+        }
+
         $scope.$onRootScope('ResultPlotCtrl.hidePlot', function() {
             $scope.rowActive = null;
             $scope.colActive = null;
@@ -380,5 +412,14 @@ angular.module('starfallxApp')
                 // console.log(result.courseOrder[i]);
                 $scope.courseList[i] = CourseStore.getByCodeSync(result.courseOrder[i]);
             }
+
+            //init nav
+            $scope.visibleResult = [];
+            for (var i = 0; i < Math.min($scope.nav.pageLen, result.list.length); i++)
+                $scope.visibleResult.push({
+                    index: i,
+                    indexArr: $scope.result.list[i]
+                });
+            $scope.nav.currentPage = 1;
         });
     });

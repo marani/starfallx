@@ -32,13 +32,9 @@ angular.module('starfallxApp')
                 }
                 else 
                     return false;
-                // console.log('d1', 'd2', d1, d2);
             } else {
                 for (var i = 0; i < courseList.length; i++)
                     for (var j = i + 1; j < courseList.length; j++) {
-                        // console.log(courseList[i].code, courseList[i].examDate);
-                        // console.log(courseList[j].code, courseList[j].examDate);
-                        // console.log('->' , examClash(courseList[i], courseList[j]));
                         if (examClash(courseList[i], courseList[j])) {
                             return true;
                         }
@@ -52,8 +48,6 @@ angular.module('starfallxApp')
                 for (var j = 0; j < slot.weeks.length; j++) {
                     var w = slot.weeks[j];
                     for (var s = slot.startTime; s < slot.endTime; s++)
-                        // if (resultCount == 0)
-                        //     console.log(slot.startTime, slot.endTime, index.code);
                         if (occupied[w][s])
                             return false;
                         else
@@ -113,16 +107,11 @@ angular.module('starfallxApp')
             resultCount = 0;
             currentResult = {};
             courseList = requirements.courseList;
-            console.log(courseList);
+            // console.log(courseList);
 
             var courseListTemp = [];
             courseList.forEach(function(course) {
                 var indexes = [];
-                // course.indexes.forEach(function(index) {
-                //     if (index.selected && ((index.visible) || (!index.visible) && (course.showHiddenIndex)))
-                //         indexes.push(index);
-                // });
-                // course.selectedIndexes = indexes;
                 if (course.selectedIndexes.length > 0) {
                     courseListTemp.push(course);
                     resultDict[course.code] = [];
@@ -130,7 +119,6 @@ angular.module('starfallxApp')
                 }
             });
             courseList = courseListTemp;
-            // console.log(courseList);
 
             courseList.forEach(function(course) {
                 course.selectedIndexes.forEach(function(index) {
@@ -145,21 +133,6 @@ angular.module('starfallxApp')
                 });
             });
 
-            // for (var i = 0; i < courseList.length; i++) {
-            //     var course = courseList[i];
-
-            //     for (var j = 0; j < course.selectedIndexes.length; j++) {
-            //         var index = course.selectedIndexes[j];
-            //         for (var k = 0; k < index.timeSlots.length; k++) {
-            //             var slot = index.timeSlots[k];
-            //             slot.day = toNumber[slot.day];
-            //             slot.startTime = normalized(slot.startTime, slot.day);
-            //             slot.endTime = normalized(slot.endTime, slot.day);
-            //         }
-            //     }
-            //     course.normalized = true;
-            // }
-            // console.log('normalized timeslot');
             for (var w = 0; w < 14; w++) {
                 occupied[w] = [];
                 for (var s = 0; s < 7 * 48; s++)
