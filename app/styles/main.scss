@@ -541,7 +541,6 @@ body {
                         background: transparent;
                         // background: lighten(#dddddd, 5%);
                         border: none;
-                        cursor: n-resize;
 
                         -moz-user-select: none;
                         -khtml-user-select: none;
@@ -563,6 +562,10 @@ body {
                                 text-align: center;
                                 padding-top: 6px;
                                 color: #ac4545;
+                                cursor: n-resize;
+                                strong {
+                                    cursor: default;
+                                }
                             }
                             button {
                                 border: none;

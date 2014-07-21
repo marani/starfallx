@@ -128,14 +128,13 @@ angular.module('starfallxApp')
                         });
                     }
                 });
-            //
             starterSlots.forEach(function(slot) {
                 slot.classList.forEach(function(cls) {
                     cls.sharedWith = slot.classList.length;
                 })
             });
-            //must work for 3 cases: nested slot, overlap slot, equal slot
-            //merge rowspan
+            // rowspan resolver - 3 cases: nested slot, overlap slot, equal slot 
+            // -> generalized to: sort by startTime, then by length, then display
             $scope.timeSlot.forEach(function(slot) {
                 if (slot.classList) spanFrom(slot);
             });
@@ -379,6 +378,15 @@ angular.module('starfallxApp')
             });
         }
 
+        $scope.scrollResult = function($event) {
+            console.log($event);
+            if ($event.deltaY > 0)
+                $scope.changeCurrentResult(-1)
+            else
+                $scope.changeCurrentResult(1);
+
+        }
+
         $scope.$onRootScope('ResultPlotCtrl.hidePlot', function() {
             $scope.rowActive = null;
             $scope.colActive = null;
@@ -397,7 +405,6 @@ angular.module('starfallxApp')
             }
 
             //init nav
-            // $scope.rowActive = 0;
             $scope.newResultSet(0);
         });
     });
