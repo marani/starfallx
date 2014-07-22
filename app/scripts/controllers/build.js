@@ -379,12 +379,10 @@ angular.module('starfallxApp')
         }
 
         $scope.scrollResult = function($event) {
-            console.log($event);
             if ($event.deltaY > 0)
                 $scope.changeCurrentResult(1)
             else
                 $scope.changeCurrentResult(-1);
-
         }
 
         $scope.$onRootScope('ResultPlotCtrl.hidePlot', function() {

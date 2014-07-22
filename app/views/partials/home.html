@@ -1,94 +1,101 @@
-<div class="home-panel container">
-    <h2 class="head text-center">NTU STARS Planner Assistant</h2>
-    <p class="text-center">A simple tool that helps you find your plan faster</p>
-    <br>
-    <div class="row text-center">
-        <a class="bookmarklet btn btn-large btn-primary" ng-href='{{bookmarklet}}'><strong>Plan Finder</strong></a>
-    </div>
-    <br>
-    <p><strong>Step 1.</strong> Drag the <strong>Plan Finder</strong> bookmarklet above to your browser's bookmark bar.</p>
-    <p><strong>Step 2.</strong> In STARS Planner, select all courses that you want to check, as usual.</p>
-    <p><strong>Step 3.</strong> Go back to STARS Planner's main page and click this bookmarklet.</p>
-    <p><strong>Step 4.</strong> A new window or new tab will be opened to find possible index combinations.</p>
-    <!--
-    <hr>
-    <h2 class="text-center">What it DOES</h2>
-    <ul>
-        <li><p>
-            It quickly checks if it is possible for you to take a set of courses. <br>
-        </p></li>
-        <li><p>
-            It returns to you the set of indexes if it is possible. <br>
-            The check is done based on courses' time slot and exam date.</p></li>
-        <li><p>
-            It shows hidden indexes that aren't shown up in STARS Planner and you might be able to appeal for.
+    <div class="home-panel-container">
+    <div class="home-panel container">
+        <!-- <h1 class="head text-center">Starfall</h1> -->
+        <!-- <p class="sub-head text-center">Make a wish.</p> -->
+        <!-- <br> -->
+        <div class="row text-center bookmarklet">
+            <div class="ribbon">
+                <div class="ribbon-stitches-top"></div>
+                    <strong class="ribbon-content">
+                        <!-- <h1>A Pure CSS Ribbon</h1> -->
+                        <h1><a ng-href='{{bookmarklet}}'><strong>Starfall</strong><p>. Make a wish . </p></a></h1>
+                    </strong>
+                <div class="ribbon-stitches-bottom"></div>
+            </div>
+            <!-- <a class="bookmarklet btn btn-large btn-primary" ng-href='{{bookmarklet}}'><strong>Plan Finder</strong></a> -->
+        </div>
+        <br>
+        <div class="text-center" id="title"><i>Starfall is a dead-simple tool <br> that helps NTU students find their plan faster. Here's how:</i></div>
+        <p><strong>Step 1.</strong> Drag the <span class="bm-link" ng-href="{{bookmarklet}}"><strong>Starfall bookmarklet</strong></span> above to your browser's bookmark bar.</p>
+        <p><strong>Step 2.</strong> In STARS Planner, as usual, pick all courses that you want to try.</p>
+        <p><strong>Step 3.</strong> Go back to STARS Planner's planning page.</p>
+        <p><strong>Step 4.</strong> From that page, click on the bookmark you just created.</p>
+        <p> A new window or new tab will be opened to find possible index combinations.</p>
+        <!--
+        <hr>
+        <h2 class="text-center">What it DOES</h2>
+        <ul>
+            <li><p>
+                It quickly checks if it is possible for you to take a set of courses. <br>
+            </p></li>
+            <li><p>
+                It returns to you the set of indexes if it is possible. <br>
+                The check is done based on courses' time slot and exam date.</p></li>
+            <li><p>
+                It shows hidden indexes that aren't shown up in STARS Planner and you might be able to appeal for.
+                </p>
+            </li>
+        </ul>
+        <h2 class="text-center">What it DOES NOT</h2>
+        <ul>
+            <li><p>It doesn't register the course for you. 
+            You still have to go to STARS Planner and register your courses in STARS. </p></li>
+            <li><p>It doesn't guarantee you can take the course if you don't meet the course's pre-requisition. We don't have that data of you.</p></li>
+            <li><p>It doesn't spam NTU server to get you more chances to get some course, because that's 
+                <a href="http://www.ntu.edu.sg/Students/Undergraduate/AcademicServices/CourseRegistration/Pages/Policies,RulesRegulations.aspx"><strong><font color="red">strictly prohibited</font></strong></a>.</p></li>
+            <li><p>It doesn't send a single HTTP request to NTU server. All requests are sent
+            to our own server developed and maintained by this application's developer.</p></li>
+        </ul>
+        -->
+        
+        <!--
+        <hr>
+        <h2 class="text-center">NTU's Policy</h2>
+        <p>The following is a part of NTU's <a href="http://www.ntu.edu.sg/Students/Undergraduate/AcademicServices/CourseRegistration/Pages/Policies,RulesRegulations.aspx">
+        Policies, Rules & Regulations</a> of course registration: </p>
+        <blockquote>
+            <p>... <br>Additionally, the use of an unauthorised computer program to gain 
+            an unfair advantage over the rest of the students in securing courses 
+            is also prohibited. <strong> The use of such programs places unnecessary load on 
+            the University registration system already supporting a heavy traffic. 
+            Rampant use could hang the system and cause major disruption to the 
+            course registration exercise. </strong>
+            <br><br>
+            It is important that NTU students conduct themselves at all times in a 
+            manner that is befitting of students and worthy of the good name of the University.
+            <br><br>
+            If you are found to have undertaken any of the above prohibited acts, 
+            the University will de-register all electives (GER PE/UE) that are 
+            in your registration records for the semester concerned. 
+            This would be regardless of whether you have registered the 
+            electives on your own, with the help of the School, 
+            through the allocation system or appeal system. 
+            In addition, you will be given a low priority in 
+            the next allocation of electives. 
+            The University will also not hesitate to take other necessary 
+            disciplinary actions against such conduct...
+        </blockquote>
+
+        <h2 class="text-center">So is this allowed?</h2>
+        <p>For short, we don't guarantee anything, yet. However, the app is being sent for NTU's approval. The result
+        is expected to be bright, because</p>
+        <ul>
+            <li><p>It isn't unfair to use this tool, for anyone can use it.</p></li>
+            <li><p>The app doesn't add any additional load to NTU server, not a single request is sent 
+            to NTU's server. This can be monitored using browser dev tool by clicking F12 -> Network inside your browser.
+            </p></li>
+            <li><p>In consequence, it even <strong>decrease the load for NTU server</strong> because most of the
+            try & false work is done in this application's environment rather than STARS Planner.</p></li>
+        </ul>
+        <p> You can try using this application at your own risk, we will soon update the approval status as soon as we hear from school.</p>
+
+        -->
+        <hr>
+        <div class="foot text-center">
+            <p>Created by 
+                <a href="https://github.com/marani" target="_blank">Marani</a>
             </p>
-        </li>
-    </ul>
-    <h2 class="text-center">What it DOES NOT</h2>
-    <ul>
-        <li><p>It doesn't register the course for you. 
-        You still have to go to STARS Planner and register your courses in STARS. </p></li>
-        <li><p>It doesn't guarantee you can take the course if you don't meet the course's pre-requisition. We don't have that data of you.</p></li>
-        <li><p>It doesn't spam NTU server to get you more chances to get some course, because that's 
-            <a href="http://www.ntu.edu.sg/Students/Undergraduate/AcademicServices/CourseRegistration/Pages/Policies,RulesRegulations.aspx"><strong><font color="red">strictly prohibited</font></strong></a>.</p></li>
-        <li><p>It doesn't send a single HTTP request to NTU server. All requests are sent
-        to our own server developed and maintained by this application's developer.</p></li>
-    </ul>
-    -->
-    
-    <!--
-    <hr>
-    <h2 class="text-center">NTU's Policy</h2>
-    <p>The following is a part of NTU's <a href="http://www.ntu.edu.sg/Students/Undergraduate/AcademicServices/CourseRegistration/Pages/Policies,RulesRegulations.aspx">
-    Policies, Rules & Regulations</a> of course registration: </p>
-    <blockquote>
-        <p>... <br>Additionally, the use of an unauthorised computer program to gain 
-        an unfair advantage over the rest of the students in securing courses 
-        is also prohibited. <strong> The use of such programs places unnecessary load on 
-        the University registration system already supporting a heavy traffic. 
-        Rampant use could hang the system and cause major disruption to the 
-        course registration exercise. </strong>
-        <br><br>
-        It is important that NTU students conduct themselves at all times in a 
-        manner that is befitting of students and worthy of the good name of the University.
-        <br><br>
-        If you are found to have undertaken any of the above prohibited acts, 
-        the University will de-register all electives (GER PE/UE) that are 
-        in your registration records for the semester concerned. 
-        This would be regardless of whether you have registered the 
-        electives on your own, with the help of the School, 
-        through the allocation system or appeal system. 
-        In addition, you will be given a low priority in 
-        the next allocation of electives. 
-        The University will also not hesitate to take other necessary 
-        disciplinary actions against such conduct...
-    </blockquote>
-
-    <h2 class="text-center">So is this allowed?</h2>
-    <p>For short, we don't guarantee anything, yet. However, the app is being sent for NTU's approval. The result
-    is expected to be bright, because</p>
-    <ul>
-        <li><p>It isn't unfair to use this tool, for anyone can use it.</p></li>
-        <li><p>The app doesn't add any additional load to NTU server, not a single request is sent 
-        to NTU's server. This can be monitored using browser dev tool by clicking F12 -> Network inside your browser.
-        </p></li>
-        <li><p>In consequence, it even <strong>decrease the load for NTU server</strong> because most of the
-        try & false work is done in this application's environment rather than STARS Planner.</p></li>
-    </ul>
-    <p> You can try using this application at your own risk, we will soon update the approval status as soon as we hear from school.</p>
-
-    -->
-    <hr>
-    <div class="foot text-center">
-        <p>Created by 
-            <a href="https://www.facebook.com/yzioh" target="_blank">NTU student</a>.
-            <!-- based on a MEAN stack & Bootstrap.  -->
-        </p>
-        <p>
-            Course data is from
-            <a href="https://wish.wis.ntu.edu.sg/webexe/owa/aus_schedule.main">NTU's class schedule site.</a>
-            <br>Last updated on June 10th 2014.
-        </p>
+            <p>With <a href="https://github.com/DaftMonk/generator-angular-fullstack" target="_blank">a MEAN stack</a> & <a href="http://getbootstrap.com/" target="_blank">Bootstrap</a>.</p>
+        </div>
     </div>
 </div>
