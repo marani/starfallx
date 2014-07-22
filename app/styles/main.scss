@@ -1,7 +1,7 @@
 $icon-font-path:"/bower_components/bootstrap-sass-official/vendor/assets/fonts/bootstrap/";
 @import "bootstrap-sass-official/vendor/assets/stylesheets/bootstrap";
 @import "compass";
- .browsehappy {
+.browsehappy {
     margin: 0.2em 0;
     background: #ccc;
     color: #000;
@@ -27,17 +27,21 @@ $placeholder-color:#ddd;
     color: $placeholder-color;
 }
 $sf-red:#ac3627;
- $lighten-0:lighten($sf-red, 5%);
- $lighten-1:lighten($sf-red, 10%);
- $lighten-2:lighten($sf-red, 15%);
- $lighten-3:lighten($sf-red, 23%);
- .auth-panel, .profile-panel {
+$lighten-0:lighten($sf-red, 5%);
+$lighten-1:lighten($sf-red, 10%);
+$lighten-2:lighten($sf-red, 15%);
+$lighten-3:lighten($sf-red, 23%);
+.auth-panel, .profile-panel {
     width: 500px;
     margin-top: 50px;
     @media(max-width:767px){
 
-margin-top: 273px;
+    margin-top: 273px;
+    }
 }
+
+* {
+    font-family: "Segoe UI";
 }
 body {
     overflow: hidden;
@@ -47,7 +51,10 @@ body {
     // background-image: url("/images/grid.png");
     overflow-y: auto;
     .home-panel {
-        width: 560px;
+        a {
+            color: #459954;
+        }
+        width: 540px;
         .head {
             margin-top: 30px;
             margin-bottom: 0px;
@@ -73,6 +80,12 @@ body {
             color: $sf-red;
         }
         .bookmarklet {
+            transition: ease-out 0.3s;
+            // &:hover {
+            //     -ms-transform: scale(1.05,1.05); /* IE 9 */
+            //     -webkit-transform: scale(1.05,1.05); /* Chrome, Safari, Opera */
+            //     transform: scale(1.05,1.05); /* Standard syntax */
+            // }
             margin-top: 50px;
             height: 100px;
             position: relative;
@@ -200,9 +213,6 @@ body {
         .foot {
             font-size: 12px;
             // line-height: 150%;
-            a {
-                color: #459954;
-            }
             margin-bottom: 20px;
         }
     }
