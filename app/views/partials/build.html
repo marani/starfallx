@@ -21,7 +21,7 @@
                             <td></td>
                             <td><strong>Indexes</strong></td>
                             <td popover="
-                                Idexes that are not available in STARS Planner 
+                                Idexes that are Not Available in STARS Planner 
                                 but you might be able to appeal for.
                                 Click on the numbers to use these indexes." 
                                 popover-trigger="mouseenter"
@@ -129,14 +129,8 @@
                     <br>
                     Adding more Indexes or removing some Course might help.</strong>
             </div>
-            <!-- <div class="ctn-result-table-head"
-                ng-show="result.list.length > 0">
-                <table class="result-table-head table table-striped table-condensed table-bordered">
-                    <tbody>
-                    </tbody>
-                </table>
-            </div> -->
             <div class="ctn-result-list">
+                <div class="border-grad border-grad-result"><div></div></div>
                 <table class="result-table table table-striped table-condensed table-bordered"
                     ng-show="(result.list.length > 0)" 
                     sf-wheel="scrollResult($event)">
@@ -176,7 +170,7 @@
 
             <!-- RESULT PLOT -->
             <div class="ctn-result-plot" ng-controller="ResultPlotCtrl" ng-show="result.list.length > 0">
-                <div class="border-grad border-grad-top"><div></div></div>
+                <div class="border-grad border-grad-plot"><div></div></div>
                 <div class="border-grad border-grad-btm"><div></div></div>
                 
                 <div class="ctn-plan-table-head">
