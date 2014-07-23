@@ -123,6 +123,14 @@ angular.module('starfallxApp')
             },
             searchCourse: function(timeSlotArray) {
 
+            },
+
+            parse: function(encodedData) {
+
+            },
+
+            encode: function(rawData) {
+
             }
         }
     })

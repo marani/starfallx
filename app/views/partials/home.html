@@ -5,17 +5,28 @@
         <!-- <br> -->
         <div class="row text-center bookmarklet">
             <div class="ribbon">
-                <div class="ribbon-stitches-top"></div>
-                    <strong class="ribbon-content">
-                        <!-- <h1>A Pure CSS Ribbon</h1> -->
-                        <h1><a ng-href='{{bookmarklet}}'><strong>Starfall</strong><p>. Make a wish . </p></a></h1>
-                    </strong>
-                <div class="ribbon-stitches-bottom"></div>
+                <div class="ribbon-center">
+                    <div class="ribbon-stitches-top"></div>
+                    <div class="ribbon-stitches-bottom"></div>
+                    <div class="stripe-left"></div>
+                    <div class="stripe-right"></div>
+                    <!-- <h1>A Pure CSS Ribbon</h1> -->
+                    <h1 class="bm-container">
+                        <a ng-href='{{bookmarklet}}'>
+                            <strong>Starfall</strong><p>Starfal - Find a Plan</p>
+                        </a>
+                    </h1>
+                    <h1 class="bm-overlay">
+                        <span class="overlay-title"><strong>Starfall</strong></span>
+                        <!-- <p class="overlay-sub"><strong>~</strong> Make a Wish <strong>~</strong></p> -->
+                        <p class="overlay-sub">. Make a Wish .</p>
+                    </h1>
+                </div>
             </div>
             <!-- <a class="bookmarklet btn btn-large btn-primary" ng-href='{{bookmarklet}}'><strong>Plan Finder</strong></a> -->
         </div>
         <br>
-        <div class="text-center" id="title"><i>With Starfall, NTU students can find possible course schedules in matters of seconds. Here's how:</i></div>
+        <div class="text-center" id="title"><i>With Starfall, NTU students can find possible course schedules within few seconds. Here's how:</i></div>
         <p><strong>Step 1.</strong> Drag the <span class="bm-link" ng-href="{{bookmarklet}}"><strong>Starfall bookmarklet</strong></span> above to your browser's bookmark bar.</p>
         <p><strong>Step 2.</strong> In STARS Planner, as usual, pick all courses that you want to try.</p>
         <p><strong>Step 3.</strong> Go back to STARS Planner's planning page.</p>

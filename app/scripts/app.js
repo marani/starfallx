@@ -29,11 +29,13 @@ angular.module('starfallxApp', [
         $routeProvider
             .when('/', {
                 templateUrl: 'partials/home',
-                controller: 'HomeCtrl'
+                controller: 'HomeCtrl',
+                title: 'Starfall'
             })
             .when('/build', {
                 templateUrl: 'partials/build',
-                controller: 'BuildCtrl'
+                controller: 'BuildCtrl',
+                title: 'Starfall. Make a Plan.'
             })
             // .when('/saved', {
             //     templateUrl: 'partials/saved',
@@ -54,7 +56,8 @@ angular.module('starfallxApp', [
             //     authenticate: true
             // })
             .otherwise({
-                redirectTo: '/'
+                redirectTo: '/',
+                title: 'Starfall'
             });
 
         $locationProvider.html5Mode(true);
@@ -78,6 +81,12 @@ angular.module('starfallxApp', [
     .run(function($rootScope, $location, Auth, CourseStore, md5, $routeParams) {
         // Redirect to login if route requires auth and you're not logged in
         var dataRetrieved = false;
+        $rootScope.$on('$routeChangeSuccess', function(event, current) {
+            // $rootScope.sfPageTitle = current.title;
+            // console.log($rootScope.sfPageTitle;
+            document.title = current.title;
+        });
+
         $rootScope.$on('$routeChangeStart', function(event, next) {
             // console.log('route start');
             // console.log('checking on build & build params ... require init? ...', ($location.path().indexOf('/build') === 0) && (!dataRetrieved));
@@ -85,7 +94,7 @@ angular.module('starfallxApp', [
                 try { 
                     var data = JSON.parse(atob($location.search().q));
                 } catch (e) {
-                    console.log('parse error');
+                    console.log('Could not parse params data.');
                     $location.path('/');
                     return;
                 }
