@@ -4,11 +4,16 @@ angular.module('starfallxApp')
     .controller('HomeCtrl', function($scope, $http) {
         var urlPartials = window.location.href.split('/');
         var base = urlPartials[0] + urlPartials[2];
+        $scope.base = urlPartials[0] + '//' + urlPartials[2];
         /* 
         bmlbuild:begin
         $scope.bookmarklet = bookmarklets/planFinder.js;
         bmlbuild:end
         */
+        $scope.hint = [undefined, false, false, false, false];
+        $scope.toggleHint = function(index) {
+            $scope.hint[index] = !$scope.hint[index];
+        }
         if (!$scope.bookmarklet) {
             $http.get('/bookmarklets/planFinder.js')
                 .success(function (data, status, headers, config) {
