@@ -2,8 +2,9 @@
 
 <div class="main-container-fixed">
     <div class="main-container-tr" 
-        ng-controller="BuildCtrl">
-
+        ng-controller="BuildCtrl"
+        tabindex="0"
+        ng-keydown="globalKeydown($event)">
         
         <div class="col-lg-5 col-md-5 col-sm-5 container-col panel-left-col course-pref-col"
             ng-controller="FilterCtrl"
@@ -90,12 +91,36 @@
                     </tbody>
                 </table>
                 <div class="ctn-btn ctn-btn-float">
-                    <button 
-                        class="btn btn-success btn-block find-btn find-btn-float"
-                        ng-disabled="buildingStarted || courseList.length == 0"
-                        ng-click="search()">
-                        <strong>Find Possible Plans</strong>
-                    </button>
+                    <table><tbody><tr>
+                        <td>
+                        <button class="btn btn-default undo-btn"
+                            ng-click="undo()">
+                            <i class="fa fa-fw fa-mail-reply"></i> <strong>Ctrl Z</strong>
+                        </button>
+                        </td>
+                        <td>
+                        <button class="btn btn-default redo-btn"
+                            ng-click="redo()">
+                            <i class="fa fa-fw fa-mail-forward"></i> <strong>Ctrl Y</strong>
+                        </button>
+                        </td>
+                        <td>
+                        <button class="btn btn-default save-btn"
+                            popover="
+                                Bookmark this page to save (Ctrl + D)"
+                            popover-trigger="mouseenter"
+                            popover-placement="top">
+                            <strong>Save</strong>
+                        </button>
+                        </td>
+                        <td>
+                        <button class="btn btn-success find-btn find-btn-float"
+                            ng-disabled="buildingStarted || courseList.length == 0"
+                            ng-click="search()">
+                            <strong>Search</strong>
+                        </button>
+                        </td>
+                    </tr></tbody></table>
                 </div>
             </sf-perfect-scrollbar>
 
@@ -103,12 +128,36 @@
             <div class="border-grad border-grad-btm"><div></div></div>
 
             <div class="ctn-btn ctn-btn-fixed">
-                <button 
-                    class="btn btn-success btn-block find-btn find-btn-fixed"
-                    ng-disabled="buildingStarted || courseList.length == 0"
-                    ng-click="search()">
-                    <strong>Find Possible Plans</strong>
-                </button>
+                <table><tbody><tr>
+                    <td>
+                    <button class="btn btn-default undo-btn"
+                        ng-click="undo()">
+                        <i class="fa fa-fw fa-mail-reply"></i> <strong>Ctrl Z</strong>
+                    </button>
+                    </td>
+                    <td>
+                    <button class="btn btn-default redo-btn"
+                        ng-click="redo()">
+                        <i class="fa fa-fw fa-mail-forward"></i> <strong>Ctrl Y</strong>
+                    </button>
+                    </td>
+                    <td>
+                    <button class="btn btn-default save-btn"
+                        popover="
+                            Bookmark this page to save (Ctrl + D)"
+                        popover-trigger="mouseenter"
+                        popover-placement="top">
+                        <strong>Save</strong>
+                    </button>
+                    </td>
+                    <td>
+                    <button class="btn btn-success find-btn find-btn-float"
+                        ng-disabled="buildingStarted || courseList.length == 0"
+                        ng-click="search()">
+                        <strong>Search</strong>
+                    </button>
+                    </td>
+                </tr></tbody></table>
             </div>
         </div>
 

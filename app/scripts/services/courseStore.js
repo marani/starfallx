@@ -99,7 +99,7 @@ angular.module('starfallxApp')
                 encodedFilter = encodedData;
                 var start = + new Date();
                 var rawFilter = JSON.parse(JSON.parse(atob(encodedData)).d);
-                console.log('parsing result:', rawFilter);
+                // console.log('parsing result:', rawFilter);
                 filterLen = 0;
                 for (var code in rawFilter) {
                     filterLen++;
@@ -125,15 +125,15 @@ angular.module('starfallxApp')
                     else
                         courseFilter[code].sfSelectedDict = null;
                 }
-                console.log('url parsed done in:', + new Date() - start + 'ms');
+                // console.log('url parsed done in:', + new Date() - start + 'ms');
             },
 
             initialize: function(callback) {
-                console.log('getAll() ...');
+                // console.log('getAll() ...');
                 var count = 0;
                 db.allDocs({ include_docs: true })
                     .then((function(collection) {
-                        console.log('loaded collection')
+                        // console.log('loaded collection')
                         // row in rows: 
                         //   row.doc <- content
                         collection.rows.forEach(function(row) {
@@ -145,8 +145,8 @@ angular.module('starfallxApp')
                                     // console.log('successfully loaded course: ', code);
                                     count++;
                                     if (count == filterLen)  {
-                                        console.log('getAll() done'); 
-                                        console.log('updateAll - mixin course & filter')
+                                        // console.log('getAll() done'); 
+                                        // console.log('updateAll - mixin course & filter')
                                         callback();
                                         initDone = true;
                                         // console.log(courseDict); 
@@ -155,10 +155,10 @@ angular.module('starfallxApp')
                         }
                     }).bind(this))
                     .catch(function(error) {
-                        console.log(error);
+                        // console.log(error);
                     })
                     .finally(function() {
-                        console.log('finally');
+                        // console.log('finally');
                     });
             },
             isInitialized: function() {
@@ -222,7 +222,7 @@ angular.module('starfallxApp')
             updateAll: function(courseFilter) {
                 // mixin filter and coursedict
                 for (var code in courseFilter) {
-                    console.log(courseDict[code]);
+                    // console.log(courseDict[code]);
                     courseDict[code].examDate = courseFilter[code].examDate;
                     // console.log(code);
                     // update examDate
@@ -323,7 +323,7 @@ angular.module('starfallxApp')
                     d: str,
                     h: md5.createHash(str)
                 }));
-                console.log('filterToParams', base64log(encodedFilter));
+                // console.log('filterToParams', base64log(encodedFilter));
             }
         }
         // 2-way binding between FilterCtrl and CourseStore is different,
@@ -364,15 +364,15 @@ angular.module('starfallxApp')
             // console.log('store-watch-location executed', base64log($location.search().q)); 
             return $location.search().q; 
         }, function() {
-            console.log('CourseStore observed a route change,',
-                'route:', base64log($location.search().q), 
-                'current param:', base64log(CourseStore.getEncodedFilter()), 
-                $location.search().q == CourseStore.getEncodedFilter(),
-                $location.path() == '');
+            // console.log('CourseStore observed a route change,',
+            //     'route:', base64log($location.search().q), 
+            //     'current param:', base64log(CourseStore.getEncodedFilter()), 
+            //     $location.search().q == CourseStore.getEncodedFilter(),
+            //     $location.path() == '');
             if (($location.path() != '/build') || 
                 ($location.search().q == CourseStore.getEncodedFilter()) || 
                 (!CourseStore.isInitialized())) return;
-            console.log('CourseStore observed a valid route change:', base64log($location.search().q));
+            // console.log('CourseStore observed a valid route change:', base64log($location.search().q));
 
             CourseStore.paramsToFilter($location.search().q);
 
@@ -387,12 +387,12 @@ angular.module('starfallxApp')
             // }
         });
         $rootScope.$on('$routeChangeStart', function(event, next, prev) {
-            console.log('change start');
+            // console.log('change start');
             // console.log('checking on build & build params ... require init? ...', ($location.path().indexOf('/build') === 0) && (!dataRetrieved));
             if (($location.path() == '/build') && (!CourseStore.isInitialized()))  {
                 //fresh load -> init
                 var status = CourseStore.validate($location.search().q);
-                console.log('url validation:', status);
+                // console.log('url validation:', status);
                 // console.log(event);
                 // event.preventDefault();
                 if (status != "success")
@@ -400,7 +400,7 @@ angular.module('starfallxApp')
                 else {
                     CourseStore.paramsToFilter($location.search().q);
                     CourseStore.initialize(function callback() { 
-                        console.log(courseFilter);
+                        // console.log(courseFilter);
                         CourseStore.updateAll(courseFilter); 
                         $rootScope.$emit('CourseStore.filterChange', { courseList: courseList });
                     });

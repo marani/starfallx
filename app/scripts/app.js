@@ -106,7 +106,7 @@ angular.module('starfallxApp', [
 
             if (oldVal == newVal)
                 return;
-            console.log("$location's filter change handler:", base64log(newVal));
+            // console.log("$location's filter change handler:", base64log(newVal));
             // if encodedFilter == current url -> do nothing
             // else change url.search
             if (newVal == $location.search().q) 

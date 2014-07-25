@@ -575,7 +575,8 @@ body {
             }
         }
         position:relative;
-        .col-head {} .ctn-course-table-head, .ctn-course-adder, .ctn-course-list, .ctn-btn-fixed, .ctn-alert, .border-grad {
+        .col-head {} 
+        .ctn-course-table-head, .ctn-course-adder, .ctn-course-list, .ctn-btn-fixed, .ctn-alert, .border-grad {
             padding-left: 15px;
             padding-right: 15px;
         }
@@ -633,9 +634,22 @@ body {
             height: 54px;
             width: 100%;
             // background: yellow;
-            button {
-                margin: 0;
-                margin-top: 10px;
+            table {
+                width: 100%;
+                table-layout: fixed;
+                tbody { 
+                    width: 100%;
+                    table-layout: fixed; 
+                    td:nth-child(1) { width: 85px; min-width: 85px; max-width: 85px; }
+                    td:nth-child(2) { width: 85px; min-width: 85px; max-width: 85px; }
+                    td:nth-child(3) { width: 60px; min-width: 60px; max-width: 60px; }
+                    td:not(:last-child) { padding-right: 5px; }
+                    button {
+                        height: 34px !important;
+                        width: 100%;
+                        margin: 0;
+                    }
+                }
             }
         }
         .ctn-btn-fixed {
@@ -643,6 +657,7 @@ body {
             z-index: 2;
             bottom: 0px;
             left: 0;
+            td { padding-top: 10px; }
         }
         .ctn-btn-float {
             padding-left: 0;
@@ -650,6 +665,9 @@ body {
             margin-top: 10px;
             margin-bottom: 10px;
             height: auto;
+            // button {
+            //     margin-top: 0;
+            // }
         }
     }
     .result-col {

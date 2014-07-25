@@ -42,15 +42,15 @@ angular.module('starfallxApp')
         }
     });
 
-function base64log(str) {
-    if (str)
-        return (str.slice(str.length - 10, str.length - 1));
-    else 
-        return (undefined);
-}
+// function base64log(str) {
+//     if (str)
+//         return (str.slice(str.length - 10, str.length - 1));
+//     else 
+//         return (undefined);
+// }
 
 angular.module('starfallxApp')
-    .controller('BuildCtrl', function($scope, $rootScope, $http, $document) {
+    .controller('BuildCtrl', function($scope, $rootScope, $http, $document, $window) {
         // $scope.leftPanel = 'ResultPlot';
         // $scope.leftPanel = 'Filter';
         // $scope.$onRootScope('ResultCtrl.showPlot', function() {
@@ -65,6 +65,13 @@ angular.module('starfallxApp')
         //     $scope.leftPanel = 'Filter';
         //     $scope.$broadcast('layoutChange');
         // });
+        $scope.globalKeydown = function($event) {
+            console.log('down', $event);
+            if ($event.ctrlKey && $event.keyCode == 90) 
+                $window.history.back();
+            else if ($event.ctrlKey && $event.keyCode == 89)
+                $window.history.forward();
+        }
     })
     .controller('ResultPlotCtrl', function($scope, $rootScope, CourseStore, WL) {
         // CONSTANTS
@@ -194,7 +201,7 @@ angular.module('starfallxApp')
         //     $rootScope.$emit('ResultPlotCtrl.hidePlot', {});
         // }
     })
-    .controller('FilterCtrl', function($scope, $timeout, $routeParams, CourseStore, PlanBuilder, $rootScope, $document, WL) {
+    .controller('FilterCtrl', function($scope, $timeout, $routeParams, CourseStore, PlanBuilder, $rootScope, $document, WL, $window) {
         var acadTime = CourseStore.getAcadTime();
         $scope.year = acadTime.year;
         $scope.sem = acadTime.sem;
@@ -258,6 +265,15 @@ angular.module('starfallxApp')
             // $scope.search();
             $scope.$apply();
         });
+
+
+        $scope.undo = function() {
+            $window.history.back();
+        }
+        $scope.redo = function() {
+            $window.history.forward();
+        }
+
         $scope.toggleHiddenIndex = function(course) {
             $rootScope.$emit('FilterCtrl.filterChange', {
                 method: 'toggleHiddenIndex',
@@ -286,7 +302,7 @@ angular.module('starfallxApp')
             // $scope.buildingStarted = false;
         }
         $scope.$onRootScope('CourseStore.filterChange', function(event, eventData) {
-            console.log(eventData.courseList);
+            // console.log(eventData.courseList);
             $scope.courseList = eventData.courseList;
             // $scope.search();
             $scope.loadingFinished = true;
