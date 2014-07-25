@@ -35,6 +35,7 @@ angular.module('starfallxApp', [
             .when('/build', {
                 templateUrl: 'partials/build',
                 controller: 'BuildCtrl',
+                reloadOnSearch: false,
                 title: 'Starfall. Make a Plan.'
             })
             // .when('/saved', {
@@ -78,79 +79,45 @@ angular.module('starfallxApp', [
             }
         ]);
     })
-    .run(function($rootScope, $location, Auth, CourseStore, md5, $routeParams) {
+    .run(function($rootScope, $location, Auth, CourseStore, $routeParams) {
         // Redirect to login if route requires auth and you're not logged in
-        var dataRetrieved = false;
+        // var dataRetrieved = false;
+
+
+        // bind course store to location
+        // $rootScope.$watch(function() { return $location.search().q}, function(newVal, oldVal) { 
+        //     console.log(oldVal, newVal);
+        //     // if q == encodedFilter -> do nothing
+        //     // else try to change filterData
+        // });
         $rootScope.$on('$routeChangeSuccess', function(event, current) {
             // $rootScope.sfPageTitle = current.title;
             // console.log($rootScope.sfPageTitle;
             document.title = current.title;
+            // console.log('change title success');
         });
+        // 2 way binding - $location.search() & CourseStore._encodedFilter
+        // way 1: 
+        // right case: user changes CourseStore._filter, CourseStore emit changes to $location
+        // wrong case (dirty check to eliminate): user changes url, url changes filter, filter changes back url
+        $rootScope.$watch(function() { return CourseStore.getEncodedFilter(); }, function(newVal, oldVal) {
+            // console.log('encodedFilter:', newVal);
+            // console.log('q:', $location.search().q);
 
-        $rootScope.$on('$routeChangeStart', function(event, next) {
-            // console.log('route start');
-            // console.log('checking on build & build params ... require init? ...', ($location.path().indexOf('/build') === 0) && (!dataRetrieved));
-            if (($location.path() == '/build') && !dataRetrieved) {
-                try { 
-                    var data = JSON.parse(atob($location.search().q));
-                } catch (e) {
-                    console.log('Could not parse params data.');
-                    $location.path('/');
-                    return;
-                }
-                // console.log(data);
-                var hash = data.h;
-                var jsonStr = data.d
-                if ((hash) && (jsonStr)) {
-                    // var jsonStr = jsonStr.replace(/\\/g, ' ');
-                    // console.log(jsonStr);
-                    // console.log(hash);
-                    // console.log(md5.createHash(jsonStr));
-                    if (hash == md5.createHash(jsonStr)) {
-                        dataRetrieved = true;
-                        CourseStore.init(JSON.parse(jsonStr));
-                        // $location.search({});
-                        // $location.path('/build');
-                    } else 
-                        $location.path('/');
-                } else
-                    $location.path('/');
-            }
+            if (oldVal == newVal)
+                return;
+            console.log("$location's filter change handler:", base64log(newVal));
+            // if encodedFilter == current url -> do nothing
+            // else change url.search
+            if (newVal == $location.search().q) 
+                return;
+            $location.search({ q: newVal });
         });
+        // way 2: 
+        // right case: user changes $location, $location emit changes to CourseStore._filter
+        // wrong case (dirty check to eliminate): user changes filter, filter changes url, url changes back filter
 
-        // var dataRetrieved = false;
-        // $rootScope.$on('$routeChangeSuccess', function(evt, current) {
-        //     console.log('-------------');
-        //     console.log('route success');
-        //     console.log(current);
-        //     console.log('checking on build & build params ... require init? ...', ($location.path().indexOf('/build') === 0) && (!dataRetrieved));
-        //     if (($location.path().indexOf('/build') === 0) && (!dataRetrieved)) {
-        //         try { 
-        //             var data = JSON.parse(atob($routeParams.data));
-        //         } catch (e) {
-        //             $location.path('/');
-        //             return;
-        //         }
-        //         var jsonStr = data.d;
-        //         var hash = data.h;
-        //         // console.log(hash && jsonStr);
-        //         if ((hash) && (jsonStr)) {
-        //             var jsonStr = jsonStr.replace(/\\/g, ' ');
-        //             // console.log(jsonStr);
-        //             // console.log(hash);
-        //             // console.log(md5.createHash(jsonStr));
-        //             if (hash == md5.createHash(jsonStr)) {
-        //                 courseStore.init(JSON.parse(jsonStr));
-        //                 dataRetrieved = true;
-        //                 console.log(dataRetrieved, 'change to build');
-        //                 $location.path('/build/_');
-        //                 evt.preventDefault();
-        //             } else 
-        //                 $location.path('/');
-        //         } else
-        //             $location.path('/');
-        //     }
-        // })
+        // 2-way binding's cycle is blocked by a dirty check (disambiguous check)
         $rootScope.$on('$routeChangeStart', function(event, next) {
             if (next.authenticate && !Auth.isLoggedIn()) {
                 $location.path('/login');

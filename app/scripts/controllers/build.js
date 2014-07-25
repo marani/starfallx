@@ -30,7 +30,24 @@ angular.module('starfallxApp')
                 return watchCount;                
             }
         }
+    })
+    .factory('UL', function() {
+        return {
+            log: function(str) {
+                if (str)
+                    console.log(str.slice(str.length - 10, str.length - 1));
+                else 
+                    console.log(undefined);
+            }
+        }
     });
+
+function base64log(str) {
+    if (str)
+        return (str.slice(str.length - 10, str.length - 1));
+    else 
+        return (undefined);
+}
 
 angular.module('starfallxApp')
     .controller('BuildCtrl', function($scope, $rootScope, $http, $document) {
@@ -185,36 +202,30 @@ angular.module('starfallxApp')
         $scope.buildingStarted = false;
         $scope.loadingFinished = false;
 
-        var updateSelectionStatus = function(course) {
-            // console.log('Filter watcher count:', WL.log($scope));
-            var selectedCount = 0;
-            course.selectedIndexes = [];
-            var all = course.showHiddenIndex ? course.indexes.length : course.visibleIndexCount;
-            course.indexes.forEach(function(index) {
-                if (index.selected && (index.visible || course.showHiddenIndex)) {
-                    selectedCount++;
-                    course.selectedIndexes.push(index);
-                }
-            });
-            course.selected = {
-                all: ((selectedCount == all) && (selectedCount > 0)),
-                none: selectedCount == 0
-            }
-        }
-
-        $scope.toggleHiddenIndex = function(course) {
-            course.showHiddenIndex = !course.showHiddenIndex;
-            updateSelectionStatus(course);
-            $scope.$emit('layoutChange'); // bad pattern
-            // $scope.$apply();
-        }
+        // var countSelected = function(course) {
+        //     // console.log('Filter watcher count:', WL.log($scope));
+        //     var selectedCount = 0;
+        //     course.selectedIndexes = [];
+        //     var all = course.showHiddenIndex ? course.indexes.length : course.visibleIndexCount;
+        //     course.indexes.forEach(function(index) {
+        //         if (index.selected && (index.visible || course.showHiddenIndex)) {
+        //             selectedCount++;
+        //             course.selectedIndexes.push(index);
+        //         }
+        //     });
+        //     course.selected = {
+        //         all: ((selectedCount == all) && (selectedCount > 0)),
+        //         none: selectedCount == 0
+        //     }
+        //     $scope.search();
+        // }
 
         $scope.groupSelect = {
             started: false,
             course: null,
             $startIndex: null,
             selectType: null,
-            preview: {}
+            preview: {},
         }
 
         $scope.handleMouseDownIndex = function(course, $index) {
@@ -226,17 +237,6 @@ angular.module('starfallxApp')
             $scope.groupSelect.$startIndex = $index;
         }
 
-        $document.on("mouseup", function() {
-            if (!$scope.groupSelect.started) return;
-            for (var $i in $scope.groupSelect.preview)
-                $scope.groupSelect.course.indexes[$i].selected = $scope.groupSelect.selectType;
-
-            $scope.groupSelect.started = false;
-            $scope.groupSelect.preview = {};
-            updateSelectionStatus($scope.groupSelect.course);
-            $scope.$apply();
-        });
-
         $scope.handleMouseEnterIndex = function(course, $index) {
             if (!$scope.groupSelect.started || (course != $scope.groupSelect.course)) return;
             // console.log('enter', $index);
@@ -247,22 +247,35 @@ angular.module('starfallxApp')
                 $scope.groupSelect.preview[i] = true;
         }
 
+        $document.on("mouseup", function() {
+            if (!$scope.groupSelect.started) return;
+            $rootScope.$emit('FilterCtrl.filterChange', {
+                method: 'selectGroup',
+                params: [$scope.groupSelect]
+            });
+            $scope.groupSelect.started = false;
+            $scope.groupSelect.preview = {};
+            // $scope.search();
+            $scope.$apply();
+        });
+        $scope.toggleHiddenIndex = function(course) {
+            $rootScope.$emit('FilterCtrl.filterChange', {
+                method: 'toggleHiddenIndex',
+                params: [course]
+            });
+            // $scope.search();
+            $scope.$emit('layoutChange'); // bad pattern
+        }
         $scope.toggleAll = function(course) {
-            if (!course.selected.all)
-            // show all index, change disabled state
-                course.indexes.forEach(function(idx) {
-                if (idx.visible || course.showHiddenIndex) idx.selected = true;
+            $rootScope.$emit('FilterCtrl.filterChange', {
+                method: 'toggleSelectAll',
+                params: [course]
             });
-            else
-            // hide all index
-                course.indexes.forEach(function(idx) {
-                if (idx.visible || course.showHiddenIndex) idx.selected = false;
-            });
-            updateSelectionStatus(course);
+            // $scope.search();
         }
 
         $scope.search = function() {
-            $scope.buildingStarted = true;
+            // $scope.buildingStarted = true;
             // var startTime = +new Date();
             // console.log('start building...');
             PlanBuilder.solveSync({
@@ -270,57 +283,14 @@ angular.module('starfallxApp')
                 type: "default"
             });
             // console.log('finished in', +new Date() - startTime, 'ms');
-            $scope.buildingStarted = false;
+            // $scope.buildingStarted = false;
         }
-
-        $scope.$watch(CourseStore.initDone, function(value) {
-            if (value == true) {
-                var courseFilter = CourseStore.getFilter();
-                // console.log(courseFilter);
-                $scope.courseList = [];
-                // console.log('filter: ');
-                for (var courseCode in courseFilter) {
-                    // console.log(courseCode);
-                    var course = CourseStore.getByCodeSync(courseCode);
-                    $scope.courseList.push(course);
-
-                    course.hiddenIndexCount = 0;
-                    course.visibleIndexCount = 0;
-                    course.indexes.forEach(function(index) {
-                        if (index.code in courseFilter[courseCode].indexDict) {
-                            index.visible = true;
-                            index.selected = true;
-                            course.visibleIndexCount++;
-                        } else {
-                            index.visible = false;
-                            course.hiddenIndexCount++;
-                        }
-                    });
-
-                    course.indexes.sort(function lt(a, b) {
-                        if (b.visible && !a.visible) return 1;
-                        else if (!b.visible && a.visible) return -1;
-                        else {
-                            if (b.code < a.code) return 1;
-                            else return -1;
-                        }
-                    });
-
-                    course.indexes.forEach(function(index) {
-                        index.timeSlots.forEach(function(timeSlot) {
-                            if (timeSlot.slotType)
-                                timeSlot.slotType = timeSlot.slotType[0] + timeSlot.slotType[1] + timeSlot.slotType[2];
-                        })
-                    })
-                    updateSelectionStatus(course);
-                }
-                $scope.loadingFinished = true;
-                // console.log('courseList: ');
-                // $scope.courseList.forEach(function(course) {
-                //     console.log(course.code);
-                // })
-            }
-        })
+        $scope.$onRootScope('CourseStore.filterChange', function(event, eventData) {
+            console.log(eventData.courseList);
+            $scope.courseList = eventData.courseList;
+            // $scope.search();
+            $scope.loadingFinished = true;
+        });
     })
     .controller('ResultCtrl', function($scope, $rootScope, CourseStore, WL) {
         /*
