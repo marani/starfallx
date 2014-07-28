@@ -261,6 +261,33 @@
             d: str,
             h: md5(str)
         }));
-        window.open(bs + "/build?q=" + param, '_blank');
+
+        var btn = $('#sfEnter');
+        
+        if (!btn.length) {
+            var a = $('<a target="_blank" id="sfEnter"><button type="button" id="sfEnter"></button></a>');
+            var btn = a.find('button');
+            btn.text('Starfall - Find a Plan');
+            $("table table:nth-child(2)").first().parent().prepend(a);
+
+            a.attr('href', bs + "/build?q=" + param);
+            btn.css({
+                /* 'font-weight': 800,*/
+                width: '190px'
+                /*height: '23px',
+                position: 'absolute',
+                top: '20px',
+                left: '50%',
+                'text-decoration': 'none',
+                color: 'white',
+                border: '1px solid red',
+                'border-radius': '5px',
+                'z-index': '100'*/
+            });
+            a.css({ 'text-decoration': 'none', 'color': 'black'});
+            a.hover(function(e) {     
+                $(this).css("background-color", e.type === "mouseenter"?"transparent":"transparent") 
+            });
+        }
     });
 })();

@@ -45,26 +45,28 @@ angular.module('starfallxApp')
         var mark = function(index) {
             for (var i = 0; i < index.timeSlots.length; i++) {
                 var slot = index.timeSlots[i];
-                for (var j = 0; j < slot.weeks.length; j++) {
-                    var w = slot.weeks[j];
-                    for (var s = slot.startTime; s < slot.endTime; s++)
-                        if (occupied[w][s])
-                            return false;
-                        else
-                            occupied[w][s] = index.code;
-                }
+                if (typeof slot.weeks == "object")
+                    for (var j = 0; j < slot.weeks.length; j++) {
+                        var w = slot.weeks[j];
+                        for (var s = slot.startTime; s < slot.endTime; s++)
+                            if (occupied[w][s])
+                                return false;
+                            else
+                                occupied[w][s] = index.code;
+                    }
             }
             return true;
         }
         var unmark = function(index) {
             for (var i = 0; i < index.timeSlots.length; i++) {
                 var slot = index.timeSlots[i];
-                for (var j = 0; j < slot.weeks.length; j++) {
-                    var w = slot.weeks[j];
-                    for (var s = slot.startTime; s < slot.endTime; s++)
-                        if (occupied[w][s] == index.code)
-                            occupied[w][s] = false;
-                }
+                if (typeof slot.weeks == "object")
+                    for (var j = 0; j < slot.weeks.length; j++) {
+                        var w = slot.weeks[j];
+                        for (var s = slot.startTime; s < slot.endTime; s++)
+                            if (occupied[w][s] == index.code)
+                                occupied[w][s] = false;
+                    }
             }
         }
         var tryIndex = function(current) {
