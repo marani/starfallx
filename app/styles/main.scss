@@ -419,24 +419,38 @@ body {
                 }
                 td:nth-child(3) {
                     text-align: center;
-                    width: 30px;
-                    min-width: 30px;
-                    max-width: 30px;
+                    width: 40px;
+                    min-width: 40px;
+                    max-width: 40px;
                     border-right: none;
                     border-left: none;
                     .index-btn {
+                        width: 36px;
                         vertical-align: top;
                         height: auto;
                         margin: 2px;
+                        text-shadow:1px 1px #696969;
                         &:focus {
                             outline: none;
                         }
+
                         &:not(.btn-success) {
+                            text-shadow:1px 1px #eee;
                             background: rgba(0, 0, 0, 0);
                             color: #AAA;
                         }
                         &:not(.btn-success):hover {
                             background: #eee;
+                        }
+
+                        &.btn-default {
+                            color: white;
+                            text-shadow:1px 1px #969696;
+                            background: lighten(#449d44, 35%);
+                            border-color: lighten(#4cae4c, 35%);
+                        }
+                        &.btn-default:hover {
+                            background: lighten(#449d44, 27%);
                         }
                     }
                 }
@@ -547,9 +561,9 @@ body {
                     max-width: 100px;
                 }
                 td:nth-child(3) {
-                    width: 30px;
-                    min-width: 30px;
-                    max-width: 30px;
+                    width: 40px;
+                    min-width: 40px;
+                    max-width: 40px;
                 }
                 td:nth-child(4) {
                     width: 100%;

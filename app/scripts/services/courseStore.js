@@ -105,7 +105,7 @@ angular.module('starfallxApp')
                     filterLen++;
                     courseFilter[code] = {
                         indexDict: {},
-                        sfSelectedDict: {},
+                        // sfSelectedDict: {},
                         selected: rawFilter[code].selected.length > 0 ?
                             [rawFilter[code].selected] :
                             [],
@@ -118,12 +118,18 @@ angular.module('starfallxApp')
                             courseFilter[code].indexDict[indexCode] = true;
                         });
 
-                    if (rawFilter[code].sfSelected && rawFilter[code].sfSelected[0].length > 0)
-                        rawFilter[code].sfSelected.forEach(function(indexCode) {
-                            courseFilter[code].sfSelectedDict[indexCode] = true;
-                        });
-                    else
+                    if (!rawFilter[code].sfSelected)
+                        // if browser loads from STARS
                         courseFilter[code].sfSelectedDict = null;
+                    else {
+                        // if not from a fresh load from STARS (load from bookmark, back/forward btn)
+                        courseFilter[code].sfSelectedDict = {};
+                        if (rawFilter[code].sfSelected && rawFilter[code].sfSelected[0].length > 0)
+                            rawFilter[code].sfSelected.forEach(function(indexCode) {
+                                courseFilter[code].sfSelectedDict[indexCode] = true;
+                            });
+                    }
+
                 }
                 // console.log('url parsed done in:', + new Date() - start + 'ms');
             },
@@ -247,13 +253,14 @@ angular.module('starfallxApp')
                         }
                     });
 
-                    if (courseFilter[code].sfSelectedDict)
+                    if (courseFilter[code].sfSelectedDict) {
                         course.indexes.forEach(function (index) {
                             if (index.code in courseFilter[code].sfSelectedDict) {
                                 index.selected = true;
                             } else 
                                 index.selected = false;
                         });
+                    }
                      
 
                     // sort index by visible > hidden, for styling purpose

@@ -18,13 +18,13 @@
                     <tbody>
                         <tr>
                             <td></td>
-                            <td><strong>Courses</strong></td>
-                            <td></td>
-                            <td><strong>Indexes</strong></td>
+                            <td><strong>Course</strong></td>
+                            <td><strong>Select</strong></td>
+                            <td><strong>Index</strong></td>
                             <td popover="
-                                Idexes that are Not Available in STARS Planner 
+                                Indexes that are Not Available in STARS Planner 
                                 but you might be able to appeal for.
-                                Click on the numbers to use these indexes." 
+                                Click on the numbers to enable selection." 
                                 popover-trigger="mouseenter"
                                 popover-placement="left">
                                 <strong>N/A</strong>
@@ -46,14 +46,20 @@
                             ng-class="{'course-filter-disabled': course.selected.none}"
                             title="{{course.code + ' - ' + course.title + ' (' + course.aus +' AU)'}}"
                             >
-                            <td><strong>{{$index + 1}}</strong></td>
+                            <td>
+                                <!-- <strong>{{$index + 1}}</strong> -->
+                                {{$index + 1}}
+                            </td>
                             <td><strong>{{course.code}}</strong></td>
                             <td>
                                 <button
                                     class="index-btn btn btn-xs"
-                                    ng-class="{'btn-success': course.selected.all}"
+                                    ng-class="{
+                                        'btn-success': course.selected.all,
+                                        'btn-default': !course.selected.all && !course.selected.none}"
                                     ng-click="toggleAll(course)">
-                                    <i class="fa fa-fw fa-check"></i>
+                                    <!-- <i class="fa fa-fw fa-check"></i> -->
+                                    {{course.selected.count}}
                                 </button>
                             </td>
                             <td> 
