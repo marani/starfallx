@@ -10,7 +10,7 @@ angular.module('starfallxApp')
         $scope.bookmarklet = bookmarklets/planFinder.js;
         bmlbuild:end
         */
-        $scope.hint = [undefined, false, false, false, false];
+        $scope.hint = [undefined, false, false, false, false, false];
         $scope.toggleHint = function(index) {
             $scope.hint[index] = !$scope.hint[index];
         }
