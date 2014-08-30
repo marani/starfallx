@@ -21,11 +21,11 @@ A webapp that helps student find possible schedules faster.
  
 
  - ####Filters
-At the moment filter is a set of course. Next filters will be more focused on higher level requirement, for example:
-    - Filter possible plans based on student's AU requirement.
-    - Filter possible plans based on student's preferred profession / career path.
-    - Improve current filter, consider 'Add Course' button.
-    - Decouple command stack from browser's history stack for better performance.
+    At the moment filter is a set of course. Next filters will be more focused on higher level requirement, for example:
+        - Filter possible plans based on student's AU requirement.
+        - Filter possible plans based on student's preferred profession / career path.
+        - Improve current filter, consider 'Add Course' button.
+        - Decouple command stack from browser's history stack for better performance.
 
 
  - ####Cloud Schedule Integration
@@ -34,15 +34,15 @@ At the moment filter is a set of course. Next filters will be more focused on hi
 
 
  - ####Plan Analytics
-To support registration, and to 
-be used as student's daily schedule
-    - Better timetable details.
-    - Total class hours / lab hours / tut hours
-    - How early does student need to wake up in average
-    - Show/hide lecture time (evil feature)
-    - Classroom map & In-Campus Travel time estimation: shortest path problems.
-    - Plan comparison, operations (add/drop) to do to switch from one plan to another
-    - How likely can student can register the plan.
+    To support registration, and to 
+    be used as student's daily schedule
+        - Better timetable details.
+        - Total class hours / lab hours / tut hours
+        - How early does student need to wake up in average
+        - Show/hide lecture time (evil feature)
+        - Classroom map & In-Campus Travel time estimation: shortest path problems.
+        - Plan comparison, operations (add/drop) to do to switch from one plan to another
+        - How likely can student can register the plan.
     
 
  - ####User Profile and Social Features
