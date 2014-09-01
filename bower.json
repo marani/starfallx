@@ -23,8 +23,5 @@
     "angular-mocks": ">=1.2.*",
     "angular-scenario": ">=1.2.*"
   },
-  "testPath": "test/client/spec",
-  "resolutions": {
-    "jquery": ">=1.10.0"
-  }
+  "testPath": "test/client/spec"
 }
